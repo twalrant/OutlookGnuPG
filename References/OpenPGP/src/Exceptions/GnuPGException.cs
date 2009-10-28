@@ -30,42 +30,42 @@ using System.Runtime.Serialization;
 
 namespace Starksoft.Cryptography.OpenPGP
 {
+  /// <summary>
+  /// This exception is thrown when a general, unexpected error condition occurs when running the GPG.EXE program.   
+  /// </summary>
+  [Serializable()]
+  public class GnuPGException : Exception
+  {
     /// <summary>
-    /// This exception is thrown when a general, unexpected error condition occurs when running the GPG.EXE program.   
+    /// Constructor.
     /// </summary>
-    [Serializable()]
-    public class GnuPGException : Exception
-    {
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public GnuPGException()
-        { }
+    public GnuPGException()
+    { }
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="message">Exception message text.</param>
-        public GnuPGException(string message)
-            : base(message)
-        { }
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="message">Exception message text.</param>
+    public GnuPGException(string message)
+      : base(message)
+    { }
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="message">Exception message text.</param>
-        /// <param name="innerException">The inner exception object.</param>
-        public GnuPGException(string message, Exception innerException)
-            : base(message, innerException)
-        { }
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="message">Exception message text.</param>
+    /// <param name="innerException">The inner exception object.</param>
+    public GnuPGException(string message, Exception innerException)
+      : base(message, innerException)
+    { }
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="info">Serialization information.</param>
-        /// <param name="context">Stream context information.</param>
-        protected GnuPGException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        { }
-    }  
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="info">Serialization information.</param>
+    /// <param name="context">Stream context information.</param>
+    protected GnuPGException(SerializationInfo info, StreamingContext context)
+      : base(info, context)
+    { }
+  }
 }

@@ -1,0 +1,14 @@
+2009-10-25    <changelog.tgc@walrant.net>
+
+	* CC.OutlookGnuPG: version 1.0.8.1, downgraded to Visual Studio
+	2005 and Visual Studio 2005 Tools for Office (VSTO2005SE).
+	- Apply VisualStudioProjectDowngrade to VS2005
+	- Apply required changes to VSTO2005
+	- Downgrade from .Net 3.0, i.e.: mainly restore strong typing.
+	- Refactor ribbon for VSTO2005SE
+	- Disable CommandBar
+
+2009-10-20    <changelog.tgc@walrant.net>
+
+        * CC.OutlookGnuPG: version 1.0.8.0 imported from
+        http://www.cumps.be/gpg-in-outlook-2007-outlookgnupg/

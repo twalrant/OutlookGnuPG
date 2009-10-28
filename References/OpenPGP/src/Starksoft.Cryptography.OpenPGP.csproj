@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{ED351287-F7EA-4AF8-B331-DF06FBBE5023}</ProjectGuid>
     <SccProjectName>
@@ -19,7 +19,6 @@
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Starksoft.Cryptography.OpenPGP</AssemblyName>
-    <AssemblyOriginatorKeyFile>..\..\..\..\..\CumpsConsulting.pfx</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -104,11 +103,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Content Include="Notes\PGP RFC 2440.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\..\..\CumpsConsulting.pfx">
-      <Link>CumpsConsulting.pfx</Link>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

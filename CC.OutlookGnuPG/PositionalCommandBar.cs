@@ -47,7 +47,7 @@ namespace CC.OutlookGnuPG
 
                 if (standardBar != null)
                 {
-                    var oldPos = standardBar.Left;
+                    int oldPos = standardBar.Left;
                     _bar.RowIndex = standardBar.RowIndex;
                     _bar.Left = standardBar.Left + standardBar.Width;
                     _bar.Position = MsoBarPosition.msoBarTop;

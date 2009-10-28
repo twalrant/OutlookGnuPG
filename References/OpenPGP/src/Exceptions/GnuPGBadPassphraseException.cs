@@ -30,44 +30,44 @@ using System.Runtime.Serialization;
 
 namespace Starksoft.Cryptography.OpenPGP
 {
+  /// <summary>
+  /// This exception is thrown when a bad passphrase is given resulting in an error condition when running the GPG.EXE program.   
+  /// </summary>
+  [Serializable()]
+  public class GnuPGBadPassphraseException : Exception
+  {
     /// <summary>
-    /// This exception is thrown when a bad passphrase is given resulting in an error condition when running the GPG.EXE program.   
+    /// Constructor.
     /// </summary>
-    [Serializable()]
-    public class GnuPGBadPassphraseException : Exception
-    {
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public GnuPGBadPassphraseException()
-        { }
+    public GnuPGBadPassphraseException()
+    { }
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="message">Exception message text.</param>
-        public GnuPGBadPassphraseException(string message)
-            : base(message)
-        { }
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="message">Exception message text.</param>
+    public GnuPGBadPassphraseException(string message)
+      : base(message)
+    { }
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="message">Exception message text.</param>
-        /// <param name="innerException">The inner exception object.</param>
-        public GnuPGBadPassphraseException(string message, Exception innerException)
-            : base(message, innerException)
-        { }
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="message">Exception message text.</param>
+    /// <param name="innerException">The inner exception object.</param>
+    public GnuPGBadPassphraseException(string message, Exception innerException)
+      : base(message, innerException)
+    { }
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="info">Serialization information.</param>
-        /// <param name="context">Stream context information.</param>
-        protected GnuPGBadPassphraseException(SerializationInfo info, StreamingContext context) 
-            : base(info, context)
-        { }
-    }  
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="info">Serialization information.</param>
+    /// <param name="context">Stream context information.</param>
+    protected GnuPGBadPassphraseException(SerializationInfo info, StreamingContext context)
+      : base(info, context)
+    { }
+  }
 
 }
 
