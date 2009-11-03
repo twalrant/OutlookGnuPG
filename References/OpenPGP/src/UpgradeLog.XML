@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
 <Properties><Property Name="Solution" Value="Starksoft.Cryptography.OpenPGP">
-</Property><Property Name="Solution File" Value="C:\Zoing\CumpsConsulting\Source\References\OpenPGP\src\Starksoft.Cryptography.OpenPGP.sln">
+</Property><Property Name="Solution File" Value="References\OpenPGP\src\Starksoft.Cryptography.OpenPGP.sln">
 </Property><Property Name="Date" Value="donderdag 9 april 2009">
 </Property><Property Name="Time" Value="18:33">
 </Property></Properties><Event ErrorLevel="0" Project="Starksoft.Cryptography.OpenPGP" Source="Starksoft.Cryptography.OpenPGP.csproj" Description="Project converted successfully">

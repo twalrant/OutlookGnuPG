@@ -34,6 +34,7 @@
     </UpgradeBackupLocation>
     <SignAssembly>true</SignAssembly>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <AssemblyOriginatorKeyFile>../../../OutlookGnuPG.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -103,6 +104,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Content Include="Notes\PGP RFC 2440.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../../OutlookGnuPG.snk" >
+      <Link>OutlookGnuPG.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
