@@ -1,3 +1,25 @@
+2009-11-04    <changelog.tgc@walrant.net>
+
+	* OutlookGnuPG.sln: Version: 1.0.9.1.
+
+	* OutlookGnuPG/OutlookGnuPG.cs 	Enable(Restore) CommandBar
+
+	* References/OpenPGP/src/GnuPG.cs (GetCommand): Read the
+	StandardOutput stream asynchronously to cope with long output.
+
+	* References/OpenPGP/src/GnuPGKeyCollection.cs (Fill): rewrite
+	parsing algorithm to support multiple uid: and sub: per
+	key. Hence, generate a GnuPGKey per (valid=with email) uid.
+
+	* OutlookGnuPG/Settings.cs (Settings): add new tab for a
+	default domain name (for appending to X.400 CN).
+
+	* OutlookGnuPG/Recipient.cs (Passphrase_Load): implement custom
+	sort to show first selected keys, followed by un-selected keys.
+
+	* OutlookGnuPG/OutlookGnuPG.cs (GetAddressCN): new function to
+	parse Exchange Server (X.400) recipient address format.
+
 2009-11-03    <changelog.tgc@walrant.net>
 
 	* OutlookGnuPG.sln: Fork version: 1.0.9.0.

@@ -126,6 +126,7 @@ namespace Starksoft.Cryptography.OpenPGP
     private int _timeout = 10000; // 10 seconds
     private Process _proc;
     private bool _outputStatus;
+    private bool _outputDataClosed;
 
     private Stream _outputStream;
     private Stream _errorStream;
@@ -427,7 +428,7 @@ namespace Starksoft.Cryptography.OpenPGP
       procInfo.RedirectStandardError = true;
 
       MemoryStream outputStream = new MemoryStream();
-
+      _outputStream = outputStream;
       try
       {
         //  start the gpg process and get back a process start info object
@@ -436,6 +437,11 @@ namespace Starksoft.Cryptography.OpenPGP
         //  push passphrase onto stdin with a CRLF
         //_proc.StandardInput.WriteLine("");
         _proc.StandardInput.Flush();
+
+        // Prepare asynchronous reading of standard output (to handle long output of gpg command)
+        _outputDataClosed = false;
+        _proc.OutputDataReceived += new DataReceivedEventHandler(GetCommandOutputDataReceived);
+        _proc.BeginOutputReadLine();
 
         //  wait for the process to return with an exit code (with a timeout variable)
         if (!_proc.WaitForExit(Timeout))
@@ -447,7 +453,11 @@ namespace Starksoft.Cryptography.OpenPGP
         if (_proc.ExitCode != 0)
           throw new GnuPGException(_proc.StandardError.ReadToEnd());
 
-        CopyStream(_proc.StandardOutput.BaseStream, outputStream);
+        // Wait and of process output stream...
+        while (_outputDataClosed == false) { }
+
+        // No longer required with asynchronous reading.
+        // CopyStream(_proc.StandardOutput.BaseStream, outputStream);
       }
       catch (Exception exp)
       {
@@ -461,6 +471,20 @@ namespace Starksoft.Cryptography.OpenPGP
       StreamReader reader = new StreamReader(outputStream);
       reader.BaseStream.Position = 0;
       return reader;
+    }
+
+    private void GetCommandOutputDataReceived(object sender, DataReceivedEventArgs e)
+    {
+      if (e.Data != null)
+      {
+        System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
+        Byte[] bytes = encoding.GetBytes(e.Data + Environment.NewLine);
+        _outputStream.Write(bytes, 0, bytes.Length);
+      }
+      else
+      {
+        _outputDataClosed = true;
+      }
     }
 
     private string GetCmdLineSwitches(ActionTypes action)
@@ -731,7 +755,8 @@ namespace Starksoft.Cryptography.OpenPGP
         {
           //  close all the streams except for our the output stream
           _proc.StandardInput.Close();
-          _proc.StandardOutput.Close();
+          // No longer allowed with asynchronous reading.
+          // _proc.StandardOutput.Close();
           _proc.StandardError.Close();
           _proc.Close();
         }

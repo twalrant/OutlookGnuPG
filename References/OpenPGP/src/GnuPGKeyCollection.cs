@@ -74,6 +74,7 @@ namespace Starksoft.Cryptography.OpenPGP
       _raw = keys.ReadToEnd();
     }
 
+#if DISABLED
     private void Fill(StreamReader data)
     {
       string line = null;
@@ -94,7 +95,56 @@ namespace Starksoft.Cryptography.OpenPGP
       }
       while (!data.EndOfStream);
     }
+#else
+    private void Fill(StreamReader data)
+    {
+      string key = null;
+      string sub = null;
+      List<string> uids = new List<string>();
 
+      // Skip header lines
+      do
+      {
+        key = data.ReadLine();
+      } while (!data.EndOfStream && !key.StartsWith("pub") && !key.StartsWith("sec"));
+
+      // Parse keys
+      while (!data.EndOfStream)
+      {
+        string line = data.ReadLine();
+
+        // Are we done with the key, store it!
+        if ( line.StartsWith("pub") 
+          || line.StartsWith("sec")
+          || string.IsNullOrEmpty(line) )
+        {
+          if ( uids.Count > 0 && !string.IsNullOrEmpty(sub))
+          {
+            foreach (string uid in uids)
+            {
+              GnuPGKey gnuKey = new GnuPGKey(String.Format("{0}\r\n{1}\r\n{2}", key, uid, sub));
+              _keyList.Add(gnuKey);
+            }
+          }
+          uids.Clear();
+          sub = null;
+          if (!data.EndOfStream)
+            key = data.ReadLine();
+        }
+        if (line.StartsWith("uid")
+          && line.Contains("<")
+          && line.Contains(">")
+          && !line.Contains("[") )
+        {
+          uids.Add(line);
+        }
+        if (line.StartsWith("sub"))
+          sub = line;
+        if (line.StartsWith("ssb"))
+          sub = line;
+      }
+    }
+#endif
 
     /// <summary>
     ///  Searches for the specified GnuPGKey object and returns the zero-based index of the

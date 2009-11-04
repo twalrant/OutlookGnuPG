@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -39,15 +40,11 @@ namespace OutlookGnuPG
 
     private Properties.Settings _settings;
     private GnuPG _gnuPg;
-#if DISABLED
     private PositionalCommandBar _gpgBar;
-#endif
     private const string _gnuPgErrorString = "[@##$$##@|!GNUPGERROR!|@##$$##@]"; // Hacky way of dealing with exceptions
 
-#if DISABLED
     // The GC comes along and eats our buttons, we need to hold a reference to it... *sigh*
-    private IDictionary<string, CommandBarButton> _buttons = new Dictionary<string, CommandBarButton>();
-#endif
+    private IDictionary<string, Office.CommandBarButton> _buttons = new Dictionary<string, Office.CommandBarButton>();
 
     private void OutlookGnuPG_Startup(object sender, EventArgs e)
     {
@@ -64,9 +61,7 @@ namespace OutlookGnuPG
       }
       _gnuPg.OutputType = OutputTypes.AsciiArmor;
 
-#if DISABLED
       AddGnuPGCommandBar();
-#endif
       Application.ItemSend += Application_ItemSend;
 #if DISABLED
       ((ApplicationEvents_11_Event)Application).Quit += OutlookGnuPG_Quit;
@@ -75,32 +70,29 @@ namespace OutlookGnuPG
 
     private void OutlookGnuPG_Shutdown(object sender, EventArgs e)
     {
-#if DISABLED
       _gpgBar.SavePosition(_settings);
-#endif
     }
 
     #region CommandBar Logic
-#if DISABLED
     private void AddGnuPGCommandBar()
     {
       // Add a commandbar with a verify/decrypt button
-      CommandBars bars = Application.ActiveExplorer().CommandBars;
+      Office.CommandBars bars = Application.ActiveExplorer().CommandBars;
       PositionalCommandBar gpgBar = GetGnuPGCommandBar(bars);
 
       // Add the bar if it doesn't exist yet
       if (gpgBar.Bar == null)
       {
         gpgBar = new PositionalCommandBar(bars.Add("GnuPGCommandBar", Type.Missing, Type.Missing, true));
-        gpgBar.Bar.Protection = MsoBarProtection.msoBarNoCustomize;
+        gpgBar.Bar.Protection = Office.MsoBarProtection.msoBarNoCustomize;
         gpgBar.Bar.Visible = true;
       }
 
       // Check if verify button exists, add it if it doesn't
-      CommandBarButton verifyButton = (CommandBarButton)gpgBar.Bar.FindControl(MsoControlType.msoControlButton, Type.Missing, "GnuPGVerifyMail", Type.Missing, true) ??
-                                      (CommandBarButton)gpgBar.Bar.Controls.Add(MsoControlType.msoControlButton, Type.Missing, Type.Missing, Type.Missing, true);
+      Office.CommandBarButton verifyButton = (Office.CommandBarButton)gpgBar.Bar.FindControl(Office.MsoControlType.msoControlButton, Type.Missing, "GnuPGVerifyMail", Type.Missing, true) ??
+                                      (Office.CommandBarButton)gpgBar.Bar.Controls.Add(Office.MsoControlType.msoControlButton, Type.Missing, Type.Missing, Type.Missing, true);
 
-      verifyButton.Style = MsoButtonStyle.msoButtonIconAndCaption;
+      verifyButton.Style = Office.MsoButtonStyle.msoButtonIconAndCaption;
       verifyButton.Caption = "Verify";
       verifyButton.Tag = "GnuPGVerifyMail";
       verifyButton.Click += VerifyButton_Click;
@@ -109,10 +101,10 @@ namespace OutlookGnuPG
         _buttons.Add(verifyButton.Tag, verifyButton);
 
       // Check if decrypt button exists, add it if it doesn't
-      CommandBarButton decryptButton = (CommandBarButton)gpgBar.Bar.FindControl(MsoControlType.msoControlButton, Type.Missing, "GnuPGDecryptMail", Type.Missing, true) ??
-                                       (CommandBarButton)gpgBar.Bar.Controls.Add(MsoControlType.msoControlButton, Type.Missing, Type.Missing, Type.Missing, true);
+      Office.CommandBarButton decryptButton = (Office.CommandBarButton)gpgBar.Bar.FindControl(Office.MsoControlType.msoControlButton, Type.Missing, "GnuPGDecryptMail", Type.Missing, true) ??
+                                       (Office.CommandBarButton)gpgBar.Bar.Controls.Add(Office.MsoControlType.msoControlButton, Type.Missing, Type.Missing, Type.Missing, true);
 
-      decryptButton.Style = MsoButtonStyle.msoButtonIconAndCaption;
+      decryptButton.Style = Office.MsoButtonStyle.msoButtonIconAndCaption;
       decryptButton.Caption = "Decrypt";
       decryptButton.Tag = "GnuPGDecryptMail";
       decryptButton.Click += DecryptButton_Click;
@@ -121,10 +113,10 @@ namespace OutlookGnuPG
         _buttons.Add(decryptButton.Tag, decryptButton);
 
       // Check if about button exists, add it if it doesn't
-      CommandBarButton settingsButton = (CommandBarButton)gpgBar.Bar.FindControl(MsoControlType.msoControlButton, Type.Missing, "GnuPGSettings", Type.Missing, true) ??
-                                        (CommandBarButton)gpgBar.Bar.Controls.Add(MsoControlType.msoControlButton, Type.Missing, Type.Missing, Type.Missing, true);
+      Office.CommandBarButton settingsButton = (Office.CommandBarButton)gpgBar.Bar.FindControl(Office.MsoControlType.msoControlButton, Type.Missing, "GnuPGSettings", Type.Missing, true) ??
+                                        (Office.CommandBarButton)gpgBar.Bar.Controls.Add(Office.MsoControlType.msoControlButton, Type.Missing, Type.Missing, Type.Missing, true);
 
-      settingsButton.Style = MsoButtonStyle.msoButtonIconAndCaption;
+      settingsButton.Style = Office.MsoButtonStyle.msoButtonIconAndCaption;
       settingsButton.Caption = "Settings";
       settingsButton.Tag = "GnuPGSettings";
       settingsButton.Click += SettingsButton_Click;
@@ -133,10 +125,10 @@ namespace OutlookGnuPG
         _buttons.Add(settingsButton.Tag, settingsButton);
 
       // Check if about button exists, add it if it doesn't
-      CommandBarButton aboutButton = (CommandBarButton)gpgBar.Bar.FindControl(MsoControlType.msoControlButton, Type.Missing, "AboutGnuPG", Type.Missing, true) ??
-                                     (CommandBarButton)gpgBar.Bar.Controls.Add(MsoControlType.msoControlButton, Type.Missing, Type.Missing, Type.Missing, true);
+      Office.CommandBarButton aboutButton = (Office.CommandBarButton)gpgBar.Bar.FindControl(Office.MsoControlType.msoControlButton, Type.Missing, "AboutGnuPG", Type.Missing, true) ??
+                                     (Office.CommandBarButton)gpgBar.Bar.Controls.Add(Office.MsoControlType.msoControlButton, Type.Missing, Type.Missing, Type.Missing, true);
 
-      aboutButton.Style = MsoButtonStyle.msoButtonIconAndCaption;
+      aboutButton.Style = Office.MsoButtonStyle.msoButtonIconAndCaption;
       aboutButton.Caption = "About";
       aboutButton.Tag = "AboutGnuPG";
       aboutButton.Click += AboutButton_Click;
@@ -148,24 +140,24 @@ namespace OutlookGnuPG
       _gpgBar = gpgBar;
     }
 
-    private PositionalCommandBar GetGnuPGCommandBar(CommandBars bars)
+    private PositionalCommandBar GetGnuPGCommandBar(Office.CommandBars bars)
     {
-      CommandBar gpgBar = null;
+      Office.CommandBar gpgBar = null;
 
       // Check if we added it already
-      foreach (CommandBar bar in bars)
+      foreach (Office.CommandBar bar in bars)
       {
-        if (((CommandBar)bar).Name != "GnuPGCommandBar")
+        if (((Office.CommandBar)bar).Name != "GnuPGCommandBar")
           continue;
 
-        gpgBar = (CommandBar)bar;
+        gpgBar = (Office.CommandBar)bar;
         break;
       }
 
       return new PositionalCommandBar(gpgBar);
     }
 
-    private void SetIcon(CommandBarButton buttonToSet, Bitmap iconToSet)
+    private void SetIcon(Office.CommandBarButton buttonToSet, Bitmap iconToSet)
     {
       ReadOnlyCollection<DataClip> clipboardBackup = ClipboardHelper.GetClipboard();
       ClipboardHelper.EmptyClipboard();
@@ -177,10 +169,10 @@ namespace OutlookGnuPG
       ClipboardHelper.SetClipboard(clipboardBackup);
     }
 
-    private void VerifyButton_Click(CommandBarButton Ctrl, ref bool CancelDefault)
+    private void VerifyButton_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)
     {
       // Get the selected item in Outlook and determine its type.
-      Selection outlookSelection = Application.ActiveExplorer().Selection;
+      Outlook.Selection outlookSelection = Application.ActiveExplorer().Selection;
       if (outlookSelection.Count <= 0)
         return;
 
@@ -201,10 +193,10 @@ namespace OutlookGnuPG
       VerifyEmail(mailItem);
     }
 
-    private void DecryptButton_Click(CommandBarButton Ctrl, ref bool CancelDefault)
+    private void DecryptButton_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)
     {
       // Get the selected item in Outlook and determine its type.
-      Selection outlookSelection = Application.ActiveExplorer().Selection;
+      Outlook.Selection outlookSelection = Application.ActiveExplorer().Selection;
       if (outlookSelection.Count <= 0)
         return;
 
@@ -225,17 +217,15 @@ namespace OutlookGnuPG
       DecryptEmail(mailItem);
     }
 
-    private void AboutButton_Click(CommandBarButton Ctrl, ref bool CancelDefault)
+    private void AboutButton_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)
     {
       Globals.OutlookGnuPG.About();
     }
 
-    private void SettingsButton_Click(CommandBarButton Ctrl, ref bool CancelDefault)
+    private void SettingsButton_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)
     {
       Globals.OutlookGnuPG.Settings();
     }
-
-#endif
     #endregion
 
     #region Send Logic
@@ -338,7 +328,7 @@ namespace OutlookGnuPG
         // Popup UI to select the encryption targets 
         List<string> mailRecipients = new List<string>();
         foreach (Outlook.Recipient mailRecipient in mailItem.Recipients)
-          mailRecipients.Add(((Outlook.Recipient)mailRecipient).Address);
+          mailRecipients.Add(GetAddressCN(((Outlook.Recipient)mailRecipient).Address));
 
         Recipient recipientDialog = new Recipient(mailRecipients); // Passing in the first addres, maybe it matches
         DialogResult recipientResult = recipientDialog.ShowDialog();
@@ -858,6 +848,7 @@ namespace OutlookGnuPG
       _settings.AutoEncrypt = settingsBox.AutoEncrypt;
       _settings.AutoSign = settingsBox.AutoSign;
       _settings.DefaultKey = settingsBox.DefaultKey;
+      _settings.DefaultDomain = settingsBox.DefaultDomain;
       _settings.Save();
 
       _gnuPg.BinaryPath = _settings.GnuPgPath;
@@ -947,6 +938,25 @@ namespace OutlookGnuPG
       return keys;
     }
 
+    string GetAddressCN(string AddressX400)
+    {
+      char[] delimiters = { '/' };
+      string[] splitAddress = AddressX400.Split(delimiters);
+      for (int k = 0; k < splitAddress.Length; k += 2)
+      {
+        if (splitAddress[k].StartsWith("cn=") && !splitAddress[k].Contains("ecipient"))
+        {
+          string address = splitAddress[k].Replace("cn=", "");
+          if (!string.IsNullOrEmpty(_settings.DefaultDomain))
+          {
+            address += "@" + _settings.DefaultDomain;
+            address = address.Replace("@@", "@");
+          }
+          return address;
+        }
+      }
+      return AddressX400;
+    }
     #endregion
   }
 }

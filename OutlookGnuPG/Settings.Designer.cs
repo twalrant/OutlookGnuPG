@@ -46,6 +46,10 @@
       this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
       this.VerifyCheckBox = new System.Windows.Forms.CheckBox();
       this.DecryptCheckBox = new System.Windows.Forms.CheckBox();
+      this.ExchangeServerTab = new System.Windows.Forms.TabPage();
+      this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+      this.label3 = new System.Windows.Forms.Label();
+      this.DefaultDomainTextBox = new System.Windows.Forms.TextBox();
       this.splitContainer2 = new System.Windows.Forms.SplitContainer();
       this.CancelButton = new System.Windows.Forms.Button();
       this.OkButton = new System.Windows.Forms.Button();
@@ -61,6 +65,8 @@
       this.tableLayoutPanel1.SuspendLayout();
       this.ReadTab.SuspendLayout();
       this.tableLayoutPanel2.SuspendLayout();
+      this.ExchangeServerTab.SuspendLayout();
+      this.tableLayoutPanel4.SuspendLayout();
       this.splitContainer2.Panel1.SuspendLayout();
       this.splitContainer2.Panel2.SuspendLayout();
       this.splitContainer2.SuspendLayout();
@@ -90,6 +96,7 @@
       this.ComposeSettings.Controls.Add(this.GeneralTab);
       this.ComposeSettings.Controls.Add(this.ComposeTab);
       this.ComposeSettings.Controls.Add(this.ReadTab);
+      this.ComposeSettings.Controls.Add(this.ExchangeServerTab);
       this.ComposeSettings.Dock = System.Windows.Forms.DockStyle.Fill;
       this.ComposeSettings.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.ComposeSettings.Location = new System.Drawing.Point(0, 0);
@@ -149,6 +156,7 @@
       this.GnuPgExe.Name = "GnuPgExe";
       this.GnuPgExe.Size = new System.Drawing.Size(226, 20);
       this.GnuPgExe.TabIndex = 1;
+      this.GnuPgExe.TextChanged += new System.EventHandler(this.GnuPgExe_TextChanged);
       // 
       // BrowseButton
       // 
@@ -286,6 +294,55 @@
       this.DecryptCheckBox.Text = "Automatically Decrypt Opened Mail";
       this.DecryptCheckBox.UseVisualStyleBackColor = true;
       // 
+      // ExchangeServerTab
+      // 
+      this.ExchangeServerTab.Controls.Add(this.tableLayoutPanel4);
+      this.ExchangeServerTab.Location = new System.Drawing.Point(4, 22);
+      this.ExchangeServerTab.Name = "ExchangeServerTab";
+      this.ExchangeServerTab.Padding = new System.Windows.Forms.Padding(3);
+      this.ExchangeServerTab.Size = new System.Drawing.Size(254, 114);
+      this.ExchangeServerTab.TabIndex = 3;
+      this.ExchangeServerTab.Text = "Exchange Server";
+      this.ExchangeServerTab.UseVisualStyleBackColor = true;
+      // 
+      // tableLayoutPanel4
+      // 
+      this.tableLayoutPanel4.ColumnCount = 2;
+      this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 18F));
+      this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+      this.tableLayoutPanel4.Controls.Add(this.label3, 1, 0);
+      this.tableLayoutPanel4.Controls.Add(this.DefaultDomainTextBox, 1, 1);
+      this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 3);
+      this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+      this.tableLayoutPanel4.RowCount = 3;
+      this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+      this.tableLayoutPanel4.Size = new System.Drawing.Size(255, 113);
+      this.tableLayoutPanel4.TabIndex = 0;
+      // 
+      // label3
+      // 
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point(21, 0);
+      this.label3.Name = "label3";
+      this.label3.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
+      this.label3.Size = new System.Drawing.Size(133, 23);
+      this.label3.TabIndex = 0;
+      this.label3.Text = "Default Domain Name";
+      // 
+      // DefaultDomainTextBox
+      // 
+      this.DefaultDomainTextBox.CausesValidation = false;
+      this.DefaultDomainTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.Errors.SetIconPadding(this.DefaultDomainTextBox, 2);
+      this.DefaultDomainTextBox.Location = new System.Drawing.Point(21, 26);
+      this.DefaultDomainTextBox.MaxLength = 64;
+      this.DefaultDomainTextBox.Name = "DefaultDomainTextBox";
+      this.DefaultDomainTextBox.Size = new System.Drawing.Size(231, 20);
+      this.DefaultDomainTextBox.TabIndex = 1;
+      this.DefaultDomainTextBox.TextChanged += new System.EventHandler(this.DefaultDomainTextBox_TextChanged);
+      // 
       // splitContainer2
       // 
       this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -363,6 +420,9 @@
       this.ReadTab.ResumeLayout(false);
       this.tableLayoutPanel2.ResumeLayout(false);
       this.tableLayoutPanel2.PerformLayout();
+      this.ExchangeServerTab.ResumeLayout(false);
+      this.tableLayoutPanel4.ResumeLayout(false);
+      this.tableLayoutPanel4.PerformLayout();
       this.splitContainer2.Panel1.ResumeLayout(false);
       this.splitContainer2.Panel2.ResumeLayout(false);
       this.splitContainer2.ResumeLayout(false);
@@ -395,6 +455,10 @@
     private System.Windows.Forms.Button BrowseButton;
     private System.Windows.Forms.ErrorProvider Errors;
     private System.Windows.Forms.FolderBrowserDialog GnuPgExeFolderDialog;
+    private System.Windows.Forms.TabPage ExchangeServerTab;
+    private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+    private System.Windows.Forms.Label label3;
+    private System.Windows.Forms.TextBox DefaultDomainTextBox;
 
   }
 }

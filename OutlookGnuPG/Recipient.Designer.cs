@@ -90,7 +90,6 @@
       this.KeyBox.Location = new System.Drawing.Point(3, 25);
       this.KeyBox.Name = "KeyBox";
       this.KeyBox.Size = new System.Drawing.Size(278, 34);
-      this.KeyBox.Sorted = true;
       this.KeyBox.TabIndex = 4;
       // 
       // Errors

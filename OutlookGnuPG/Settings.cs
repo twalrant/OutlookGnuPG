@@ -21,6 +21,7 @@ namespace OutlookGnuPG
       DefaultKey = settings.DefaultKey;
       GnuPgPath = settings.GnuPgPath;
       _originalExeWidth = GnuPgExe.Width;
+      DefaultDomain = settings.DefaultDomain;
 
       // Temporary disable all settings regarding auto-verify/decrypt
       ComposeSettings.TabPages.RemoveByKey(ReadTab.Name);
@@ -79,6 +80,12 @@ namespace OutlookGnuPG
 
         PopulatePrivateKeys(!string.IsNullOrEmpty(value));
       }
+    }
+
+    internal string DefaultDomain
+    {
+      get { return DefaultDomainTextBox.Text; }
+      set { DefaultDomainTextBox.Text = value; }
     }
 
     private void BrowseButton_Click(object sender, System.EventArgs e)
@@ -161,6 +168,15 @@ namespace OutlookGnuPG
           : string.Empty;
 
       return true;
+    }
+
+    private void GnuPgExe_TextChanged(object sender, System.EventArgs e)
+    {
+    }
+
+    private void DefaultDomainTextBox_TextChanged(object sender, System.EventArgs e)
+    {
+      DefaultDomain = DefaultDomainTextBox.Text;
     }
   }
 }

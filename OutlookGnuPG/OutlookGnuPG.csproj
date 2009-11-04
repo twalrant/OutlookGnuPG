@@ -212,6 +212,7 @@
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="OutlookGnuPG.cs">
       <SubType>Code</SubType>
@@ -239,7 +240,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Credits.txt" />
+    <Content Include="Credits.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="openpgp-license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
