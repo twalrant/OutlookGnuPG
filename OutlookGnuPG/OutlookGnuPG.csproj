@@ -240,15 +240,17 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Credits.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="openpgp-license.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="..\OutlookGnuPG.snk">
       <Link>OutlookGnuPG.snk</Link>
     </None>
+    <Content Include="..\Copyright.txt">
+      <Link>Copyright.txt</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\References/OpenPGP/openpgp-license.txt">
+      <Link>openpgp-license.txt</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\About.png" />
     <None Include="Resources\verify.bmp" />
     <None Include="app.config" />

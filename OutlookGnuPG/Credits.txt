@@ -1,4 +1,0 @@
-﻿Icons used from http://www.famfamfam.com/lab/icons/silk/
-OpenPGP Wrapper from http://www.starksoft.com/
-Initial version 1.0.8.0 of CC.OutlookGnuPG from
-  http://www.cumps.be/gpg-in-outlook-2007-outlookgnupg/
