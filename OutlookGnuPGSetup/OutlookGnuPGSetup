@@ -33,6 +33,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_04A16D91D6DD4096811BAA33F02A2445"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0ADDEEDB45D3440A9D49C846B427C219"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -87,8 +93,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_7E3EE7545FEFD06E615D1DFE8CFE069C"
-        "OwnerKey" = "8:_A03D164B00FA492F85BDD637CDFF83C0"
+        "MsmKey" = "8:_65BA93F5783640FC8452FB574B50D196"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -101,6 +107,12 @@
         {
         "MsmKey" = "8:_A0AF0F117C3640C4A5FFB410F2587D9E"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D74225BE86BAF997211BF993CDB9DEDD"
+        "OwnerKey" = "8:_A03D164B00FA492F85BDD637CDFF83C0"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -160,7 +172,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7E3EE7545FEFD06E615D1DFE8CFE069C"
+        "OwnerKey" = "8:_D74225BE86BAF997211BF993CDB9DEDD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -413,6 +425,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_04A16D91D6DD4096811BAA33F02A2445"
+            {
+            "SourcePath" = "8:..\\References\\OpenPGP\\openpgp-license.txt"
+            "TargetName" = "8:openpgp-license.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_3BF66C01357F44B58CC12A73D691B088"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0EE5A73917D6DE815732E970E62940DF"
             {
             "SourcePath" = "8:Microsoft.VisualStudio.Tools.Applications.Runtime.tlb"
@@ -557,14 +589,34 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7E3EE7545FEFD06E615D1DFE8CFE069C"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_65BA93F5783640FC8452FB574B50D196"
+            {
+            "SourcePath" = "8:..\\Copyright.txt"
+            "TargetName" = "8:Copyright.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_3BF66C01357F44B58CC12A73D691B088"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D74225BE86BAF997211BF993CDB9DEDD"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Starksoft.Cryptography.OpenPGP, Version=1.0.130.0, Culture=neutral, PublicKeyToken=f9d2ceb53063a3bf, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_7E3EE7545FEFD06E615D1DFE8CFE069C"
+                    "_D74225BE86BAF997211BF993CDB9DEDD"
                     {
                     "Name" = "8:Starksoft.Cryptography.OpenPGP.dll"
                     "Attributes" = "3:512"
@@ -1503,7 +1555,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0ADDEEDB45D3440A9D49C846B427C219"
             {
-            "SourcePath" = "8:..\\OutlookGnuPGSecurity\\obj\\Debug\\SetSecurity.dll"
+            "SourcePath" = "8:..\\OutlookGnuPGSecurity\\obj\\Release\\SetSecurity.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3BF66C01357F44B58CC12A73D691B088"
@@ -1531,7 +1583,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_A03D164B00FA492F85BDD637CDFF83C0"
             {
-            "SourcePath" = "8:..\\OutlookGnuPG\\obj\\Debug\\OutlookGnuPG.dll"
+            "SourcePath" = "8:..\\OutlookGnuPG\\obj\\Release\\OutlookGnuPG.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3BF66C01357F44B58CC12A73D691B088"
@@ -1559,7 +1611,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_A0AF0F117C3640C4A5FFB410F2587D9E"
             {
-            "SourcePath" = "8:..\\OutlookGnuPGSecurity\\obj\\Debug\\SetSecurity.dll"
+            "SourcePath" = "8:..\\OutlookGnuPGSecurity\\obj\\Release\\SetSecurity.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3BF66C01357F44B58CC12A73D691B088"

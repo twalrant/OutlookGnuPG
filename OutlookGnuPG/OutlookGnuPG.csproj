@@ -247,7 +247,7 @@
       <Link>Copyright.txt</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\References/OpenPGP/openpgp-license.txt">
+    <Content Include="..\References\OpenPGP\openpgp-license.txt">
       <Link>openpgp-license.txt</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
