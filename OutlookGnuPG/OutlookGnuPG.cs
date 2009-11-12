@@ -1,4 +1,17 @@
-﻿using System;
+﻿// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or any
+// later version.
+//
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
@@ -42,6 +55,9 @@ namespace OutlookGnuPG
     private GnuPG _gnuPg;
     private PositionalCommandBar _gpgBar;
     private const string _gnuPgErrorString = "[@##$$##@|!GNUPGERROR!|@##$$##@]"; // Hacky way of dealing with exceptions
+    private Outlook.Explorer _explorer;
+    private Outlook.Inspectors _inspectors;        // Outlook inspectors collection
+    internal List<OutlookInspector> Windows;
 
     // The GC comes along and eats our buttons, we need to hold a reference to it... *sigh*
     private IDictionary<string, Office.CommandBarButton> _buttons = new Dictionary<string, Office.CommandBarButton>();
@@ -61,17 +77,237 @@ namespace OutlookGnuPG
       }
       _gnuPg.OutputType = OutputTypes.AsciiArmor;
 
+      // Initialize command bar, starting with registering an Explorer Close Event.
+      // See http://social.msdn.microsoft.com/Forums/en-US/vsto/thread/df53276b-6b44-448f-be86-7dd46c3786c7/
+      _explorer = Application.ActiveExplorer();
+      ((Outlook.ExplorerEvents_10_Event)_explorer).Close += new Outlook.ExplorerEvents_10_CloseEventHandler(OutlookGnuPG_ExplorerClose);
+
       AddGnuPGCommandBar();
+
+      // Register an event for ItemSend
       Application.ItemSend += Application_ItemSend;
-#if DISABLED
+#if VSTO2008
       ((ApplicationEvents_11_Event)Application).Quit += OutlookGnuPG_Quit;
 #endif
+
+      // Initialize the outlook inspectors
+      Windows = new List<OutlookInspector>();
+      _inspectors = this.Application.Inspectors;
+      _inspectors.NewInspector += new Outlook.InspectorsEvents_NewInspectorEventHandler(OutlookGnuPG_NewInspector);
+
     }
 
-    private void OutlookGnuPG_Shutdown(object sender, EventArgs e)
+    /// <summary>
+    /// Event handler whenever the active explorer is closed
+    /// See http://social.msdn.microsoft.com/Forums/en-US/vsto/thread/df53276b-6b44-448f-be86-7dd46c3786c7/
+    /// </summary>
+    void OutlookGnuPG_ExplorerClose()
     {
       _gpgBar.SavePosition(_settings);
     }
+
+    /// <summary>
+    /// Shutdown the Add-In.
+    /// Note: some closing statements must happen before this event, see OutlookGnuPG_ExplorerClose().
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OutlookGnuPG_Shutdown(object sender, EventArgs e)
+    {
+      // Unhook event handler
+      _inspectors.NewInspector -= new Outlook.InspectorsEvents_NewInspectorEventHandler(OutlookGnuPG_NewInspector);
+
+      Windows.Clear();
+      Windows = null;
+      _inspectors = null;
+    }
+
+    /// The inspector logic handles the registration and execution of mailItem
+    /// events (Open, Close and Write) to initialize, maintain and save the
+    /// ribbon button states per mailItem.
+    /// 
+    #region Inspector Logic
+    /// <summary>
+    /// The NewInspector event fires whenever a new inspector is displayed. We use
+    /// this event to initialize button to mail item inspectors.
+    /// </summary>
+    /// <param name="Inspector"></param>
+    private void OutlookGnuPG_NewInspector(Outlook.Inspector inspector)
+    {
+      Outlook.MailItem mailItem = inspector.CurrentItem as Outlook.MailItem;
+      if (mailItem != null && mailItem.Sent == false)
+      {
+        OutlookInspector existingWindow = FindOutlookInspector(inspector);
+        if (existingWindow == null)
+        {
+          // Create a window/inspector wrapper and register a close method.
+          OutlookInspector window = new OutlookInspector(inspector);
+          window.Close += new EventHandler(WrappedWindow_Close);
+          window.MailOpen += new EventHandler(mailItem_Open);
+          window.MailSave += new EventHandler(mailItem_Save);
+          window.MailClose += new EventHandler(mailItem_Close);
+          Windows.Add(window);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Event handler to close or dispose the OutlookInspector.
+    /// </summary>
+    /// <param name="sender">the OutlookInspector to close</param>
+    /// <param name="e">empty event</param>
+    private void WrappedWindow_Close(object sender, EventArgs e)
+    {
+      OutlookInspector window = (OutlookInspector)sender;
+      window.Close -= new EventHandler(WrappedWindow_Close);
+      window.MailOpen -= new EventHandler(mailItem_Open);
+      window.MailClose -= new EventHandler(mailItem_Close);
+      window.MailSave -= new EventHandler(mailItem_Save);
+
+      Windows.Remove(window);
+    }
+
+    /// <summary>
+    /// Event fired when a mailItem is opened.
+    /// This handler is designed to initialize the state of the compose button
+    /// states (Sign/Encrypt) with recorded values, if present, or with default
+    /// settings values.
+    /// </summary>
+    /// <param name="sender">the opened mailItem</param>
+    /// <param name="e">empty event</param>
+    void mailItem_Open(object sender, EventArgs e)
+    {
+      Outlook.MailItem mailItem = (Outlook.MailItem)sender as Outlook.MailItem;
+
+      // Only handle mail to be sent (in composing)
+      if (mailItem != null && mailItem.Sent == true)
+        return;
+
+      Outlook.UserProperty SignProperpty = mailItem.UserProperties["GnuPGSetting.Sign"];
+      if (SignProperpty == null)
+      {
+        ribbon.SignButton.Checked = _settings.AutoSign;
+      }
+      else
+      {
+        ribbon.SignButton.Checked = (bool)SignProperpty.Value;
+      }
+
+      Outlook.UserProperty EncryptProperpty = mailItem.UserProperties["GnuPGSetting.Encrypt"];
+      if (EncryptProperpty == null)
+      {
+        ribbon.EncryptButton.Checked = _settings.AutoEncrypt;
+      }
+      else
+      {
+        ribbon.EncryptButton.Checked = (bool)EncryptProperpty.Value;
+      }
+
+      ribbon.InvalidateButtons();
+    }
+
+    /// <summary>
+    ///  Event fired when a mailItem is closed.
+    /// </summary>
+    /// <param name="sender">the mailItem to close</param>
+    /// <param name="e">empty event</param>
+    void mailItem_Close(object sender, EventArgs e)
+    {
+      Outlook.MailItem mailItem = (Outlook.MailItem)sender as Outlook.MailItem;
+
+      // Only handle mail to be sent (in composing)
+      if (mailItem != null && mailItem.Sent == true)
+        return;
+
+      bool toSave = false;
+      Outlook.UserProperty SignProperpty = mailItem.UserProperties["GnuPGSetting.Sign"];
+      if (SignProperpty == null || (bool)SignProperpty.Value != ribbon.SignButton.Checked)
+      {
+        toSave = true;
+      }
+      Outlook.UserProperty EncryptProperpty = mailItem.UserProperties["GnuPGSetting.Encrypt"];
+      if (EncryptProperpty == null || (bool)EncryptProperpty.Value != ribbon.EncryptButton.Checked)
+      {
+        toSave = true;
+      }
+      if (toSave == true)
+      {
+#if DISABLED
+        BoolEventArgs ev = e as BoolEventArgs;
+        DialogResult res = MessageBox.Show("Do you want to save changes?",
+                                           "OutlookGnuPG",
+                                           MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
+        if (res == DialogResult.Yes)
+        {
+          // Must call mailItem.Write event handler (mailItem_Save) explicitely as it is not always called
+          // from the mailItem.Save() method. Mail is effectly saved only if a property changed.
+          mailItem_Save(sender, EventArgs.Empty);
+          mailItem.Save();
+        }
+        if (res == DialogResult.Cancel)
+        {
+          ev.Value = true;
+        }
+#else
+        // Invalidate the mailItem to force Outlook to ask to save the mailItem, hence calling
+        // the mailItem_Save() handler to record the buttons state.
+        // Note: the reason (button state property change) to save the mailItem is not necessairy obvious
+        // to the user, certainly if nothing has been updated/changed by the user. If specific notification
+        // is required see DISABLED code above. Beware, it might open 2 dialog boxes: the add-in custom and
+        // the regular Outlook save confirmation.
+        mailItem.Subject = mailItem.Subject;
+      }
+#endif
+    }
+
+    /// <summary>
+    /// Event fired when a mailItem is saved.
+    /// This handler is designed to record the compose button state (Sign/Encrypt)
+    /// associated to this mailItem.
+    /// </summary>
+    /// <param name="sender">the mailItem to save</param>
+    /// <param name="e">empty event</param>
+    void mailItem_Save(object sender, EventArgs e)
+    {
+      Outlook.MailItem mailItem = (Outlook.MailItem)sender as Outlook.MailItem;
+
+      // Only handle mail to be sent (in composing)
+      if (mailItem != null && mailItem.Sent == true)
+        return;
+
+      // Record compose button states.
+      Outlook.UserProperty SignProperpty = mailItem.UserProperties["GnuPGSetting.Sign"];
+      if (SignProperpty == null)
+      {
+        SignProperpty = mailItem.UserProperties.Add("GnuPGSetting.Sign", Outlook.OlUserPropertyType.olYesNo, false, null);
+      }
+      SignProperpty.Value = ribbon.SignButton.Checked;
+
+      Outlook.UserProperty EncryptProperpty = mailItem.UserProperties["GnuPGSetting.Encrypt"];
+      if (EncryptProperpty == null)
+      {
+        EncryptProperpty = mailItem.UserProperties.Add("GnuPGSetting.Encrypt", Outlook.OlUserPropertyType.olYesNo, false, null);
+      }
+      EncryptProperpty.Value = ribbon.EncryptButton.Checked;
+    }
+
+    /// <summary>
+    /// Looks up the window wrapper for a given window object
+    /// </summary>
+    /// <param name="window">An outlook inspector window</param>
+    /// <returns></returns>
+    private OutlookInspector FindOutlookInspector(object window)
+    {
+      foreach (OutlookInspector inspector in Windows)
+      {
+        if (inspector.Window == window)
+        {
+          return inspector;
+        }
+      }
+      return null;
+    }
+    #endregion
 
     #region CommandBar Logic
     private void AddGnuPGCommandBar()
@@ -852,25 +1088,8 @@ namespace OutlookGnuPG
       _settings.Save();
 
       _gnuPg.BinaryPath = _settings.GnuPgPath;
-      UpdateRibbons();
     }
 
-    internal void UpdateRibbons()
-    {
-#if VS2008
-      foreach (var outlookRibbon in Globals.Ribbons)
-      {
-        var ribbon = outlookRibbon as GnuPGRibbonCompose;
-
-        if (ribbon == null)
-          continue;
-
-        ribbon.UpdateButtons(_settings);
-      }
-#else
-      ribbon.UpdateButtons(_settings);
-#endif
-    }
     #endregion
 
     #region Key Management
@@ -959,4 +1178,114 @@ namespace OutlookGnuPG
     }
     #endregion
   }
+
+  #region Outlook Inspector MailItem Wrapper
+  /// <summary>
+  /// OutlookInspector class used to wrap event handler around a mailItem.
+  /// </summary>
+  internal class OutlookInspector
+  {
+    internal Outlook.Inspector Window;           // wrapped window object
+    internal event EventHandler Close = null;
+    internal event EventHandler MailOpen = null;
+    internal event EventHandler MailClose = null;
+    internal event EventHandler MailSave = null;
+
+    private Outlook.MailItem _mailItem;   // wrapped MailItem
+
+    public OutlookInspector(Outlook.Inspector inspector)
+    {
+      Window = inspector;
+      _mailItem = inspector.CurrentItem as Outlook.MailItem;
+      if (_mailItem != null)
+      {
+        // Hookup mailItem events
+        ((Outlook.ItemEvents_10_Event)_mailItem).Open += new Outlook.ItemEvents_10_OpenEventHandler(mailItem_Open);
+        ((Outlook.ItemEvents_10_Event)_mailItem).Close += new Outlook.ItemEvents_10_CloseEventHandler(mailItem_Close);
+        ((Outlook.ItemEvents_10_Event)_mailItem).Write += new Outlook.ItemEvents_10_WriteEventHandler(mailItem_Write);
+      }
+
+      // Hookup inspector events
+      ((Outlook.InspectorEvents_Event)inspector).Close += new Outlook.InspectorEvents_CloseEventHandler(OutlookWindow_Close);
+    }
+
+    /// <summary>
+    /// mailItem OpenEventHandler
+    /// </summary>
+    void mailItem_Open(ref bool Cancel)
+    {
+      if (_mailItem == null)
+        return;
+      if (MailOpen == null)
+        return;
+      BoolEventArgs bev = new BoolEventArgs(false);
+      MailOpen(_mailItem, bev);
+      Cancel = bev.Value;
+    }
+
+    /// <summary>
+    /// mailItem CloseEventHandler
+    /// </summary>
+    void mailItem_Close(ref bool Cancel)
+    {
+      if (_mailItem == null)
+        return;
+      if (MailClose == null)
+        return;
+      BoolEventArgs bev = new BoolEventArgs(false);
+      MailClose(_mailItem, bev);
+      Cancel = bev.Value;
+    }
+
+    /// <summary>
+    /// mailItem WriteEventHandler
+    /// </summary>
+    void mailItem_Write(ref bool Cancel)
+    {
+      if (_mailItem == null)
+        return;
+      if (MailSave == null)
+        return;
+      BoolEventArgs bev = new BoolEventArgs(false);
+      MailSave(_mailItem, bev);
+      Cancel = bev.Value;
+    }
+
+    /// <summary>
+    /// Event Handler for the inspector close event.
+    /// </summary>
+    private void OutlookWindow_Close()
+    {
+      ((Outlook.InspectorEvents_Event)Window).Close -= new Outlook.InspectorEvents_CloseEventHandler(OutlookWindow_Close);
+      if (_mailItem != null)
+      {
+        // Unhook mailItem events from the window
+        ((Outlook.ItemEvents_10_Event)_mailItem).Open -= new Outlook.ItemEvents_10_OpenEventHandler(mailItem_Open);
+        ((Outlook.ItemEvents_10_Event)_mailItem).Close -= new Outlook.ItemEvents_10_CloseEventHandler(mailItem_Close);
+        ((Outlook.ItemEvents_10_Event)_mailItem).Write -= new Outlook.ItemEvents_10_WriteEventHandler(mailItem_Write);
+      }
+
+      if (Close != null)
+      {
+        Close(this, EventArgs.Empty);
+      }
+
+      Window = null;
+      _mailItem = null;
+    }
+
+  }
+
+  /// <summary>
+  /// Boolean EventArgs class to return a false/true result of an EventHandler.
+  /// </summary>
+  public class BoolEventArgs : EventArgs
+  {
+    internal bool Value = false;
+    public BoolEventArgs(bool value)
+    {
+      Value = value;
+    }
+  }
+  #endregion
 }

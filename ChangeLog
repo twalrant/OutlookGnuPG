@@ -1,3 +1,21 @@
+2009-11-12    <changelog.tgc@walrant.net>
+
+	* OutlookGnuPG/OutlookGnuPG.cs (OutlookGnuPG_ExplorerClose): add
+	handler to close explorer in order to close command bar.
+	(OutlookGnuPG_NewInspector): Add outlook inspector logic to handle
+	the registration and execution of mailItem events.
+	(UpdateRibbons): removed, move UpdateButtons to mailItem.Open
+
+	* OutlookGnuPG/GnuPGRibbonRead.xml: correct type of DecryptButton
+	and VerifyButton.
+
+	* OutlookGnuPG/GnuPGRibbon.cs (InvalidateButtons): new method to
+	invalidate buttons.
+	(OnLoad): move UpdateButtons to mailItem.Open
+	(OnDecryptButton/OnVerifyButton): correct type of DecryptButton
+	and VerifyButton to simple button iso. toggle button. Add missing
+	calls to DecryptEmail and VerifyEmail
+
 2009-11-06    <changelog.tgc@walrant.net>
 
 	* OutlookGnuPGSetup/OutlookGnuPGSetup: Make sure the copyright
