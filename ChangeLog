@@ -1,3 +1,16 @@
+2009-11-14    <changelog.tgc@walrant.net>
+
+	* OutlookGnuPG/OutlookGnuPG.cs (OutlookGnuPG_CloseActiveExplorer):
+	correct closure of the command bar, ie; in the explorer close
+	event.
+	(OutlookGnuPG_NewExplorer/OutlookGnuPG_NewInspector) Add or update
+	support for explorer and inspector, use outlook wrapper classes.
+	(wrappedExplorer_ViewSwitch): hide command bar in
+	Calendar/Contacts/Tasks windows (Issue#21).
+
+	* OutlookGnuPG/OutlookWrapper.cs (OutlookWrapper.cs): new file for
+	outlook wrapper classes.
+
 2009-11-12    <changelog.tgc@walrant.net>
 
 	* OutlookGnuPG/OutlookGnuPG.cs (OutlookGnuPG_ExplorerClose): add
