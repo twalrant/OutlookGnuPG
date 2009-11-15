@@ -136,6 +136,7 @@ namespace Starksoft.Cryptography.OpenPGP
     private const string GPG_REGISTRY_VALUE_INSTALLLOCATION = "InstallLocation";
     private const string GPG_REGISTRY_VALUE_DISPLAYVERSION = "DisplayVersion";
     private const string GPG_COMMON_INSTALLATION_PATH = @"C:\Program Files\GNU\GnuPG";
+    private const string GPG_DEFAULT_CMD_OPTIONS = "--batch --no-tty --no-auto-check-trustdb ";
 
     /// <summary>
     /// GnuPG actions.
@@ -409,6 +410,9 @@ namespace Starksoft.Cryptography.OpenPGP
     {
       StringBuilder options = new StringBuilder();
 
+      // Apply default command line options.
+      options.Append(GPG_DEFAULT_CMD_OPTIONS);
+
       //  set a home directory if the user specifies one
       if (!string.IsNullOrEmpty(_homePath))
         options.Append(String.Format(CultureInfo.InvariantCulture, "--homedir \"{0}\" ", _homePath));
@@ -461,7 +465,7 @@ namespace Starksoft.Cryptography.OpenPGP
       }
       catch (Exception exp)
       {
-        throw new GnuPGException(String.Format("An error occurred while trying to execute command {0}.", command, exp));
+        throw new GnuPGException(String.Format("An error occurred while trying to execute command {0}.\r\n{1}", command, exp.Message));
       }
       finally
       {
@@ -490,6 +494,9 @@ namespace Starksoft.Cryptography.OpenPGP
     private string GetCmdLineSwitches(ActionTypes action)
     {
       StringBuilder options = new StringBuilder();
+
+      // Apply default command line options.
+      options.Append(GPG_DEFAULT_CMD_OPTIONS);
 
       //  set a home directory if the user specifies one
       if (_homePath != null && _homePath.Length != 0)
@@ -630,7 +637,7 @@ namespace Starksoft.Cryptography.OpenPGP
       }
       catch (Exception exp)
       {
-        throw new GnuPGException(String.Format(CultureInfo.InvariantCulture, "An error occurred while trying to {0} data using GnuPG.  GPG.EXE command switches used: {1}", action.ToString(), procInfo.Arguments), exp);
+        throw new GnuPGException(String.Format(CultureInfo.InvariantCulture, "An error occurred while trying to {0} data using GnuPG.  GPG.EXE command switches used: {1}.\r\n{2}", action.ToString(), procInfo.Arguments, exp.Message), exp);
       }
       finally
       {

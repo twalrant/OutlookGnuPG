@@ -118,7 +118,7 @@ namespace Starksoft.Cryptography.OpenPGP
           || line.StartsWith("sec")
           || string.IsNullOrEmpty(line) )
         {
-          if ( uids.Count > 0 && !string.IsNullOrEmpty(sub))
+          if (uids.Count > 0)
           {
             foreach (string uid in uids)
             {
@@ -128,8 +128,10 @@ namespace Starksoft.Cryptography.OpenPGP
           }
           uids.Clear();
           sub = null;
-          if (!data.EndOfStream)
+          do
+          {
             key = data.ReadLine();
+          } while (!data.EndOfStream && !key.StartsWith("pub") && !key.StartsWith("sec"));
         }
         if (line.StartsWith("uid")
           && line.Contains("<")
