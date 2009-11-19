@@ -127,6 +127,7 @@ namespace Starksoft.Cryptography.OpenPGP
     private Process _proc;
     private bool _outputStatus;
     private bool _outputDataClosed;
+    private string _userCmdOptions = "";
 
     private Stream _outputStream;
     private Stream _errorStream;
@@ -207,6 +208,12 @@ namespace Starksoft.Cryptography.OpenPGP
     {
       get { return _outputStatus; }
       set { _outputStatus = value; }
+    }
+
+    public string UserCmdOptions
+    {
+      get { return _userCmdOptions; }
+      set { _userCmdOptions = value; }
     }
 
     /// <summary>
@@ -510,9 +517,15 @@ namespace Starksoft.Cryptography.OpenPGP
 
       //  always use the trusted model so we don't get an interactive session with gpg.exe
       //options.Append("--trust-model always ");
+      // Note: better be provided by the user in the UserCmdOptions property.
+
+      // Apply user defined command options.
+      if (string.IsNullOrEmpty(_userCmdOptions) != true)
+        options.Append(_userCmdOptions + " ");
 
       if (_outputStatus)
         options.Append("--status-fd 1 ");
+
 
       //  handle the action
       switch (action)

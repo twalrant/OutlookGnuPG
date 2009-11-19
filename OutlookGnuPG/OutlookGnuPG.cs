@@ -724,26 +724,46 @@ namespace OutlookGnuPG
       {
         using (StreamWriter writer = new StreamWriter(inputStream))
         {
-          writer.Write(mail);
-          writer.Flush();
-          inputStream.Position = 0;
-          _gnuPg.Passphrase = passphrase;
-          _gnuPg.Recipients = recipients;
-          _gnuPg.OutputStatus = false;
+          // Ready for two passes encryption.
+          foreach (string option in new string[] { "", "--trust-model always" })
+          {
+            _gnuPg.UserCmdOptions = option;
 
-          try
-          {
-            _gnuPg.Encrypt(inputStream, outputStream);
-          }
-          catch (Exception ex)
-          {
-            MessageBox.Show(
+            writer.Write(mail);
+            writer.Flush();
+            inputStream.Position = 0;
+            _gnuPg.Passphrase = passphrase;
+            _gnuPg.Recipients = recipients;
+            _gnuPg.OutputStatus = false;
+
+            try
+            {
+              _gnuPg.Encrypt(inputStream, outputStream);
+              break; // Stop two passes here on success.
+            }
+            catch (Exception ex)
+            {
+              if (string.IsNullOrEmpty(option) && ex.Message.StartsWith("gpg: C4771111"))
+              {
+                DialogResult res = MessageBox.Show(
+                    ex.Message + "\r\n\r\nEncrypt mail anyway?",
+                    "GnuPG Warning",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Exclamation);
+                if (res == DialogResult.Cancel)
+                  return _gnuPgErrorString;
+              }
+              else
+              {
+                MessageBox.Show(
                 ex.Message,
-                "GnuPG Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
+                  "GnuPG Error",
+                  MessageBoxButtons.OK,
+                  MessageBoxIcon.Error);
 
-            return _gnuPgErrorString;
+                return _gnuPgErrorString;
+              }
+            }
           }
         }
 
@@ -764,27 +784,47 @@ namespace OutlookGnuPG
       {
         using (StreamWriter writer = new StreamWriter(inputStream))
         {
-          writer.Write(mail);
-          writer.Flush();
-          inputStream.Position = 0;
-          _gnuPg.Passphrase = passphrase;
-          _gnuPg.Recipients = recipients;
-          _gnuPg.Sender = key;
-          _gnuPg.OutputStatus = false;
-
-          try
+          // Ready for two passes sign/encryption.
+          foreach (string option in new string[] { "", "--trust-model always" })
           {
-            _gnuPg.SignAndEncrypt(inputStream, outputStream);
-          }
-          catch (Exception ex)
-          {
-            MessageBox.Show(
-                ex.Message,
-                "GnuPG Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
+            _gnuPg.UserCmdOptions = option;
 
-            return _gnuPgErrorString;
+            writer.Write(mail);
+            writer.Flush();
+            inputStream.Position = 0;
+            _gnuPg.Passphrase = passphrase;
+            _gnuPg.Recipients = recipients;
+            _gnuPg.Sender = key;
+            _gnuPg.OutputStatus = false;
+
+            try
+            {
+              _gnuPg.SignAndEncrypt(inputStream, outputStream);
+              break; // Stop two passes here on success.
+            }
+            catch (Exception ex)
+            {
+              if (string.IsNullOrEmpty(option) && ex.Message.StartsWith("gpg: C4771111"))
+              {
+                DialogResult res = MessageBox.Show(
+                  ex.Message + "\r\n\r\nSign and Encrypt the mail anyway?",
+                  "GnuPG Warning",
+                  MessageBoxButtons.OKCancel,
+                  MessageBoxIcon.Exclamation);
+                if (res == DialogResult.Cancel)
+                  return _gnuPgErrorString;
+              }
+              else
+              {
+                MessageBox.Show(
+                    ex.Message,
+                    "GnuPG Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
+                return _gnuPgErrorString;
+              }
+            }
           }
         }
 

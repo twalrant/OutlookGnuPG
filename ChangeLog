@@ -1,3 +1,19 @@
+2009-11-19    <changelog.tgc@walrant.net>
+
+	* OutlookGnuPG/OutlookGnuPG.cs (EncryptEmail/SignAndEncryptEmail):
+	add support for untrusted key.
+
+	* References/OpenPGP/src/GnuPG.cs (UserCmdOptions): add new
+	property for user defined gpg command options (ie: --trust-model).
+
+2009-11-15    <changelog.tgc@walrant.net>
+
+	* References/OpenPGP/src/GnuPG.cs (class GnuPG): add (global)
+	default command line options.
+
+	* References/OpenPGP/src/GnuPGKeyCollection.cs (Fill): accept
+	empty sub-keys.
+
 2009-11-14    <changelog.tgc@walrant.net>
 
 	* OutlookGnuPG/OutlookGnuPG.cs (OutlookGnuPG_CloseActiveExplorer):
