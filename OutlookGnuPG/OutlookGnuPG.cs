@@ -17,6 +17,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 using OutlookGnuPG.Properties;
 
@@ -137,6 +138,8 @@ namespace OutlookGnuPG
       _WrappedObjects.Clear();
       _WrappedObjects = null;
       _inspectors = null;
+      _explorers = null;
+      _explorer = null;
     }
 
     #region Explorer Logic
@@ -932,7 +935,7 @@ namespace OutlookGnuPG
       }
       else if (verifyResult.Contains("GOODSIG"))
       {
-        errorResult = errorResult.Replace("gpg: ", string.Empty);
+        errorResult = RemoveInvalidAka(errorResult.Replace("gpg: ", string.Empty));
 
         MessageBox.Show(
             errorResult,
@@ -1134,7 +1137,7 @@ namespace OutlookGnuPG
         }
         else if (verifyResult.Contains("GOODSIG"))
         {
-          errorResult = errorResult.Replace("gpg: ", string.Empty);
+          errorResult = RemoveInvalidAka(errorResult.Replace("gpg: ", string.Empty));
 
           MessageBox.Show(
               errorResult,
@@ -1278,6 +1281,23 @@ namespace OutlookGnuPG
       }
       return AddressX400;
     }
+
     #endregion
+
+    #region Helper Logic
+    private string RemoveInvalidAka(string msg)
+    {
+      char[] delimiters = { '\r', '\n' };
+      string result = string.Empty;
+      Regex r = new Regex("aka.*jpeg image of size");
+      foreach (string s in msg.Split(delimiters))
+      {
+        if (string.IsNullOrEmpty(s) || r.IsMatch(s))
+          continue;
+        result += s + Environment.NewLine;
+      }
+      return result;
+    }
+     #endregion
   }
 }
