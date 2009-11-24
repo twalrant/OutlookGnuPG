@@ -128,6 +128,7 @@ namespace Starksoft.Cryptography.OpenPGP
     private bool _outputStatus;
     private bool _outputDataClosed;
     private string _userCmdOptions = "";
+    private Encoding _outputDataEncoding = Encoding.ASCII;
 
     private Stream _outputStream;
     private Stream _errorStream;
@@ -410,7 +411,7 @@ namespace Starksoft.Cryptography.OpenPGP
     /// <returns>Collection of GnuPGKey objects.</returns>
     public GnuPGKeyCollection GetKeys()
     {
-      return new GnuPGKeyCollection(GetCommand("--list-keys"));
+      return new GnuPGKeyCollection(GetCommand("--list-keys --display-charset utf-8"));
     }
 
     private StreamReader GetCommand(string command)
@@ -437,6 +438,11 @@ namespace Starksoft.Cryptography.OpenPGP
       procInfo.RedirectStandardInput = true;
       procInfo.RedirectStandardOutput = true;
       procInfo.RedirectStandardError = true;
+
+      if (command.Contains("utf-8"))
+        procInfo.StandardOutputEncoding = _outputDataEncoding = Encoding.UTF8;
+      else
+        procInfo.StandardOutputEncoding = _outputDataEncoding = Encoding.ASCII;
 
       MemoryStream outputStream = new MemoryStream();
       _outputStream = outputStream;
@@ -488,8 +494,7 @@ namespace Starksoft.Cryptography.OpenPGP
     {
       if (e.Data != null)
       {
-        System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
-        Byte[] bytes = encoding.GetBytes(e.Data + Environment.NewLine);
+        Byte[] bytes = _outputDataEncoding.GetBytes(e.Data + Environment.NewLine);
         _outputStream.Write(bytes, 0, bytes.Length);
       }
       else
