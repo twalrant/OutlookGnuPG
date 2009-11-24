@@ -48,7 +48,7 @@ namespace OutlookGnuPG
 
      // 1/ Collect selected keys and sort them.
       foreach (GnuKey gnuKey in keys)
-        if (null != _defaultKeys.Find(delegate(string key) { return gnuKey.Key.StartsWith(key); }))
+        if (null != _defaultKeys.Find(delegate(string key) { return gnuKey.Key.StartsWith(key, true, null); }))
         {
           selectedCount++;
           datasource.Add(gnuKey);
@@ -58,7 +58,7 @@ namespace OutlookGnuPG
       // 2/ Collect unselected keys and sort them.
       List<GnuKey> datasource2 = new List<GnuKey>();
       foreach (GnuKey gnuKey in keys)
-        if (null == _defaultKeys.Find(delegate(string key) { return gnuKey.Key.StartsWith(key); }))
+        if (null == _defaultKeys.Find(delegate(string key) { return gnuKey.Key.StartsWith(key, true, null); }))
           datasource2.Add(gnuKey);
       datasource2.Sort(new GnuKeySorter());
 

@@ -1266,11 +1266,11 @@ namespace OutlookGnuPG
     {
       char[] delimiters = { '/' };
       string[] splitAddress = AddressX400.Split(delimiters);
-      for (int k = 0; k < splitAddress.Length; k += 2)
+      for (int k = 0; k < splitAddress.Length; k++)
       {
-        if (splitAddress[k].StartsWith("cn=") && !splitAddress[k].Contains("ecipient"))
+        if (splitAddress[k].StartsWith("cn=", true, null) && !Regex.IsMatch(splitAddress[k], "ecipient", RegexOptions.IgnoreCase) )
         {
-          string address = splitAddress[k].Replace("cn=", "");
+          string address = Regex.Replace(splitAddress[k], "cn=", string.Empty, RegexOptions.IgnoreCase);
           if (!string.IsNullOrEmpty(_settings.DefaultDomain))
           {
             address += "@" + _settings.DefaultDomain;
@@ -1298,6 +1298,6 @@ namespace OutlookGnuPG
       }
       return result;
     }
-     #endregion
+    #endregion
   }
 }
