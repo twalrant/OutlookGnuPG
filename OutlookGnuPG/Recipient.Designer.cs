@@ -84,6 +84,7 @@
       // 
       // KeyBox
       // 
+      this.KeyBox.CheckOnClick = true;
       this.KeyBox.Dock = System.Windows.Forms.DockStyle.Top;
       this.KeyBox.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.KeyBox.FormattingEnabled = true;
