@@ -1,6 +1,7 @@
 2009-11-24    <changelog.tgc@walrant.net>
 
 	* OutlookGnuPG/Recipient.Designer.cs: Enable CheckOnClick.
+	* OutlookGnuPG/About.cs: Add build date.
 	* OutlookGnuPG/OutlookGnuPG.cs (GetAddressCN): add support for
 	ignore-case.
 	(RemoveInvalidAka): filter out unexpected aka name.
