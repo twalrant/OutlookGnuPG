@@ -36,7 +36,7 @@
       this.InitialAboutLabel = new System.Windows.Forms.Label();
       this.InitialByLabel = new System.Windows.Forms.Label();
       this.ForkLabel = new System.Windows.Forms.LinkLabel();
-      this.DateLabel = new System.Windows.Forms.Label();
+      this.BuildLabel = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
       // AboutLabel
@@ -168,7 +168,7 @@
       this.ForkLabel.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.ForkLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
       this.ForkLabel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(147)))), ((int)(((byte)(149)))), ((int)(((byte)(152)))));
-      this.ForkLabel.Location = new System.Drawing.Point(12, 65);
+      this.ForkLabel.Location = new System.Drawing.Point(12, 70);
       this.ForkLabel.Name = "ForkLabel";
       this.ForkLabel.Size = new System.Drawing.Size(217, 13);
       this.ForkLabel.TabIndex = 8;
@@ -177,19 +177,18 @@
       this.ForkLabel.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(147)))), ((int)(((byte)(149)))), ((int)(((byte)(152)))));
       this.ForkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ClickLink);
       // 
-      // DateLabel
+      // BuildLabel
       // 
-      this.DateLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.DateLabel.AutoSize = true;
-      this.DateLabel.BackColor = System.Drawing.Color.White;
-      this.DateLabel.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.DateLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(147)))), ((int)(((byte)(149)))), ((int)(((byte)(152)))));
-      this.DateLabel.Location = new System.Drawing.Point(221, 52);
-      this.DateLabel.Name = "DateLabel";
-      this.DateLabel.Size = new System.Drawing.Size(88, 13);
-      this.DateLabel.TabIndex = 9;
-      this.DateLabel.Text = "-01-Jan-2000-";
-      this.DateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+      this.BuildLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.BuildLabel.BackColor = System.Drawing.Color.White;
+      this.BuildLabel.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.BuildLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(147)))), ((int)(((byte)(149)))), ((int)(((byte)(152)))));
+      this.BuildLabel.Location = new System.Drawing.Point(91, 52);
+      this.BuildLabel.Name = "BuildLabel";
+      this.BuildLabel.Size = new System.Drawing.Size(202, 13);
+      this.BuildLabel.TabIndex = 9;
+      this.BuildLabel.Text = "-01-Jan-2000-";
+      this.BuildLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
       // 
       // About
       // 
@@ -199,7 +198,7 @@
       this.BackColor = System.Drawing.Color.White;
       this.BackgroundImage = global::OutlookGnuPG.Properties.Resources.About;
       this.ClientSize = new System.Drawing.Size(321, 322);
-      this.Controls.Add(this.DateLabel);
+      this.Controls.Add(this.BuildLabel);
       this.Controls.Add(this.ForkLabel);
       this.Controls.Add(this.InitialByLabel);
       this.Controls.Add(this.InitialAboutLabel);
@@ -234,7 +233,7 @@
     private System.Windows.Forms.Label InitialAboutLabel;
     private System.Windows.Forms.Label InitialByLabel;
     private System.Windows.Forms.LinkLabel ForkLabel;
-    private System.Windows.Forms.Label DateLabel;
+    private System.Windows.Forms.Label BuildLabel;
 
   }
 }

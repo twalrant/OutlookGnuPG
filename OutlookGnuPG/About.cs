@@ -46,16 +46,15 @@ namespace OutlookGnuPG
 
       Text = String.Format("About {0} ", AssemblyTitle);
 
-      AboutLabel.Text = string.Format("{0} {1}.{2}.{3}.{4}",
+      AboutLabel.Text = string.Format("{0} {1}.{2}",
                                       AssemblyTitle,
                                       AssemblyVersion.Major,
-                                      AssemblyVersion.Minor,
-                                      AssemblyVersion.Build,
-                                      AssemblyVersion.Revision);
-      DateTime buildDate =
-         new FileInfo(Assembly.GetExecutingAssembly().Location).LastWriteTime;
-      DateLabel.Text = buildDate.ToLongDateString();
-      DateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+                                      AssemblyVersion.Minor );
+
+      // If you're using [assembly: AssemblyVersion("1.0.*")], the third number
+      // of the assembly version is a julian date with 0 = 1 Jan 2000
+      DateTime buildDate = new DateTime(2000,1,1).AddDays( AssemblyVersion.Build );
+      BuildLabel.Text = string.Format("Build {0}, {1}", AssemblyVersion.Build, buildDate.ToLongDateString());
     }
 
     private void ClickLink(object sender, LinkLabelLinkClickedEventArgs e)

@@ -1,3 +1,8 @@
+2009-11-25    <changelog.tgc@walrant.net>
+
+	* OutlookGnuPG/About.cs: Correct build date, move to v1.1 and use
+	the auto-increment for build number.
+
 2009-11-24    <changelog.tgc@walrant.net>
 
 	* OutlookGnuPG/Recipient.Designer.cs: Enable CheckOnClick.
