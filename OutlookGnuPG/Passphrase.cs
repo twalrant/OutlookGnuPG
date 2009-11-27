@@ -9,6 +9,8 @@ namespace OutlookGnuPG
   {
     private readonly string _defaultKey;
     private const string _enterPhrase = " < enter passphrase > ";
+    private char _passwordChar = '*'; // Global password char, if case it's changed 
+                                      // before PreparePrivateKeyField()
 
     internal string SelectedKey
     {
@@ -73,7 +75,7 @@ namespace OutlookGnuPG
 
     private void PreparePrivateKeyField()
     {
-      PrivateKey.PasswordChar = '*';
+      PrivateKey.PasswordChar = _passwordChar;
       PrivateKey.Text = string.Empty;
       PrivateKey.TextAlign = HorizontalAlignment.Left;
       PrivateKey.ForeColor = Color.Black;
@@ -113,6 +115,15 @@ namespace OutlookGnuPG
         // Hide the form and let our main addin take over again
         Hide();
       }
+    }
+
+    private void ShowCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+      if ( ShowCheckBox.Checked == true )
+        _passwordChar = (char)0;
+      else
+        _passwordChar = '*';
+      PrivateKey.PasswordChar = _passwordChar;
     }
   }
 }
