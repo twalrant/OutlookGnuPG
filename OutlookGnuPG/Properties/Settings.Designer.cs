@@ -206,5 +206,20 @@ namespace OutlookGnuPG.Properties
         this["DefaultDomain"] = value;
       }
     }
+
+    [global::System.Configuration.UserScopedSettingAttribute()]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    [global::System.Configuration.DefaultSettingValueAttribute("False")]
+    public bool Encrypt2Self
+    {
+      get
+      {
+        return ((bool)(this["Encrypt2Self"]));
+      }
+      set
+      {
+        this["Encrypt2Self"] = value;
+      }
+    }
   }
 }

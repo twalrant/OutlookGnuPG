@@ -732,6 +732,9 @@ namespace OutlookGnuPG
           {
             _gnuPg.UserCmdOptions = option;
 
+            if (_settings.Encrypt2Self == true)
+              _gnuPg.UserCmdOptions += " --encrypt-to " + _settings.DefaultKey;
+
             writer.Write(mail);
             writer.Flush();
             inputStream.Position = 0;
@@ -767,6 +770,10 @@ namespace OutlookGnuPG
                 return _gnuPgErrorString;
               }
             }
+            finally
+            {
+              _gnuPg.UserCmdOptions = string.Empty;
+            }
           }
         }
 
@@ -791,6 +798,9 @@ namespace OutlookGnuPG
           foreach (string option in new string[] { "", "--trust-model always" })
           {
             _gnuPg.UserCmdOptions = option;
+
+            if (_settings.Encrypt2Self == true)
+              _gnuPg.UserCmdOptions += " --encrypt-to " + _settings.DefaultKey;
 
             writer.Write(mail);
             writer.Flush();
@@ -827,6 +837,10 @@ namespace OutlookGnuPG
 
                 return _gnuPgErrorString;
               }
+            }
+            finally
+            {
+              _gnuPg.UserCmdOptions = string.Empty;
             }
           }
         }
@@ -1184,6 +1198,7 @@ namespace OutlookGnuPG
         return;
 
       _settings.GnuPgPath = settingsBox.GnuPgPath;
+      _settings.Encrypt2Self = settingsBox.Encrypt2Self;
       _settings.AutoDecrypt = settingsBox.AutoDecrypt;
       _settings.AutoVerify = settingsBox.AutoVerify;
       _settings.AutoEncrypt = settingsBox.AutoEncrypt;
@@ -1268,7 +1283,7 @@ namespace OutlookGnuPG
       string[] splitAddress = AddressX400.Split(delimiters);
       for (int k = 0; k < splitAddress.Length; k++)
       {
-        if (splitAddress[k].StartsWith("cn=", true, null) && !Regex.IsMatch(splitAddress[k], "ecipient", RegexOptions.IgnoreCase) )
+        if (splitAddress[k].StartsWith("cn=", true, null) && !Regex.IsMatch(splitAddress[k], "ecipient", RegexOptions.IgnoreCase))
         {
           string address = Regex.Replace(splitAddress[k], "cn=", string.Empty, RegexOptions.IgnoreCase);
           if (!string.IsNullOrEmpty(_settings.DefaultDomain))

@@ -29,122 +29,123 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-      this.ComposeSettings = new System.Windows.Forms.TabControl();
+      this.MainContainer = new System.Windows.Forms.SplitContainer();
+      this.MainTabControl = new System.Windows.Forms.TabControl();
       this.GeneralTab = new System.Windows.Forms.TabPage();
-      this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-      this.label2 = new System.Windows.Forms.Label();
+      this.GeneralTableLayout = new System.Windows.Forms.TableLayoutPanel();
+      this.GpgLocationLabel = new System.Windows.Forms.Label();
       this.GnuPgExe = new System.Windows.Forms.TextBox();
       this.BrowseButton = new System.Windows.Forms.Button();
       this.ComposeTab = new System.Windows.Forms.TabPage();
-      this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+      this.ComposeTableLayout = new System.Windows.Forms.TableLayoutPanel();
       this.SignCheckBox = new System.Windows.Forms.CheckBox();
       this.EncryptCheckBox = new System.Windows.Forms.CheckBox();
-      this.label1 = new System.Windows.Forms.Label();
+      this.Encrypt2SelfCheckBox = new System.Windows.Forms.CheckBox();
+      this.DefaultKeyLabel = new System.Windows.Forms.Label();
       this.KeyBox = new System.Windows.Forms.ComboBox();
       this.ReadTab = new System.Windows.Forms.TabPage();
-      this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+      this.ReadTableLayout = new System.Windows.Forms.TableLayoutPanel();
       this.VerifyCheckBox = new System.Windows.Forms.CheckBox();
       this.DecryptCheckBox = new System.Windows.Forms.CheckBox();
       this.ExchangeServerTab = new System.Windows.Forms.TabPage();
-      this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-      this.label3 = new System.Windows.Forms.Label();
+      this.ExchangeServerTableLayout = new System.Windows.Forms.TableLayoutPanel();
+      this.DefaultDomainLabel = new System.Windows.Forms.Label();
       this.DefaultDomainTextBox = new System.Windows.Forms.TextBox();
-      this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+      this.ButtonsContainer = new System.Windows.Forms.SplitContainer();
       this.CancelButton = new System.Windows.Forms.Button();
       this.OkButton = new System.Windows.Forms.Button();
       this.Errors = new System.Windows.Forms.ErrorProvider(this.components);
       this.GnuPgExeFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
-      this.splitContainer1.Panel1.SuspendLayout();
-      this.splitContainer1.Panel2.SuspendLayout();
-      this.splitContainer1.SuspendLayout();
-      this.ComposeSettings.SuspendLayout();
+      this.MainContainer.Panel1.SuspendLayout();
+      this.MainContainer.Panel2.SuspendLayout();
+      this.MainContainer.SuspendLayout();
+      this.MainTabControl.SuspendLayout();
       this.GeneralTab.SuspendLayout();
-      this.tableLayoutPanel3.SuspendLayout();
+      this.GeneralTableLayout.SuspendLayout();
       this.ComposeTab.SuspendLayout();
-      this.tableLayoutPanel1.SuspendLayout();
+      this.ComposeTableLayout.SuspendLayout();
       this.ReadTab.SuspendLayout();
-      this.tableLayoutPanel2.SuspendLayout();
+      this.ReadTableLayout.SuspendLayout();
       this.ExchangeServerTab.SuspendLayout();
-      this.tableLayoutPanel4.SuspendLayout();
-      this.splitContainer2.Panel1.SuspendLayout();
-      this.splitContainer2.Panel2.SuspendLayout();
-      this.splitContainer2.SuspendLayout();
+      this.ExchangeServerTableLayout.SuspendLayout();
+      this.ButtonsContainer.Panel1.SuspendLayout();
+      this.ButtonsContainer.Panel2.SuspendLayout();
+      this.ButtonsContainer.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.Errors)).BeginInit();
       this.SuspendLayout();
       // 
-      // splitContainer1
+      // MainContainer
       // 
-      this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-      this.splitContainer1.Name = "splitContainer1";
-      this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+      this.MainContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.MainContainer.Location = new System.Drawing.Point(0, 0);
+      this.MainContainer.Name = "MainContainer";
+      this.MainContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
       // 
-      // splitContainer1.Panel1
+      // MainContainer.Panel1
       // 
-      this.splitContainer1.Panel1.Controls.Add(this.ComposeSettings);
+      this.MainContainer.Panel1.Controls.Add(this.MainTabControl);
       // 
-      // splitContainer1.Panel2
+      // MainContainer.Panel2
       // 
-      this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-      this.splitContainer1.Size = new System.Drawing.Size(262, 171);
-      this.splitContainer1.SplitterDistance = 140;
-      this.splitContainer1.TabIndex = 0;
+      this.MainContainer.Panel2.Controls.Add(this.ButtonsContainer);
+      this.MainContainer.Size = new System.Drawing.Size(262, 252);
+      this.MainContainer.SplitterDistance = 218;
+      this.MainContainer.TabIndex = 0;
       // 
-      // ComposeSettings
+      // MainTabControl
       // 
-      this.ComposeSettings.Controls.Add(this.GeneralTab);
-      this.ComposeSettings.Controls.Add(this.ComposeTab);
-      this.ComposeSettings.Controls.Add(this.ReadTab);
-      this.ComposeSettings.Controls.Add(this.ExchangeServerTab);
-      this.ComposeSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.ComposeSettings.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.ComposeSettings.Location = new System.Drawing.Point(0, 0);
-      this.ComposeSettings.Name = "ComposeSettings";
-      this.ComposeSettings.SelectedIndex = 0;
-      this.ComposeSettings.Size = new System.Drawing.Size(262, 140);
-      this.ComposeSettings.TabIndex = 0;
+      this.MainTabControl.Controls.Add(this.GeneralTab);
+      this.MainTabControl.Controls.Add(this.ComposeTab);
+      this.MainTabControl.Controls.Add(this.ReadTab);
+      this.MainTabControl.Controls.Add(this.ExchangeServerTab);
+      this.MainTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.MainTabControl.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.MainTabControl.Location = new System.Drawing.Point(0, 0);
+      this.MainTabControl.Name = "MainTabControl";
+      this.MainTabControl.SelectedIndex = 0;
+      this.MainTabControl.Size = new System.Drawing.Size(262, 218);
+      this.MainTabControl.TabIndex = 0;
       // 
       // GeneralTab
       // 
-      this.GeneralTab.Controls.Add(this.tableLayoutPanel3);
+      this.GeneralTab.Controls.Add(this.GeneralTableLayout);
       this.GeneralTab.Location = new System.Drawing.Point(4, 22);
       this.GeneralTab.Name = "GeneralTab";
       this.GeneralTab.Padding = new System.Windows.Forms.Padding(3);
-      this.GeneralTab.Size = new System.Drawing.Size(254, 114);
+      this.GeneralTab.Size = new System.Drawing.Size(254, 192);
       this.GeneralTab.TabIndex = 2;
       this.GeneralTab.Text = "General";
       this.GeneralTab.UseVisualStyleBackColor = true;
       // 
-      // tableLayoutPanel3
+      // GeneralTableLayout
       // 
-      this.tableLayoutPanel3.ColumnCount = 2;
-      this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 18F));
-      this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-      this.tableLayoutPanel3.Controls.Add(this.label2, 1, 0);
-      this.tableLayoutPanel3.Controls.Add(this.GnuPgExe, 1, 1);
-      this.tableLayoutPanel3.Controls.Add(this.BrowseButton, 1, 2);
-      this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
-      this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-      this.tableLayoutPanel3.RowCount = 4;
-      this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-      this.tableLayoutPanel3.Size = new System.Drawing.Size(248, 108);
-      this.tableLayoutPanel3.TabIndex = 1;
+      this.GeneralTableLayout.ColumnCount = 2;
+      this.GeneralTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 18F));
+      this.GeneralTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+      this.GeneralTableLayout.Controls.Add(this.GpgLocationLabel, 1, 0);
+      this.GeneralTableLayout.Controls.Add(this.GnuPgExe, 1, 1);
+      this.GeneralTableLayout.Controls.Add(this.BrowseButton, 1, 2);
+      this.GeneralTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.GeneralTableLayout.Location = new System.Drawing.Point(3, 3);
+      this.GeneralTableLayout.Name = "GeneralTableLayout";
+      this.GeneralTableLayout.RowCount = 4;
+      this.GeneralTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.GeneralTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.GeneralTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.GeneralTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+      this.GeneralTableLayout.Size = new System.Drawing.Size(248, 186);
+      this.GeneralTableLayout.TabIndex = 1;
       // 
-      // label2
+      // GpgLocationLabel
       // 
-      this.label2.AutoSize = true;
-      this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.label2.Location = new System.Drawing.Point(21, 0);
-      this.label2.Name = "label2";
-      this.label2.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
-      this.label2.Size = new System.Drawing.Size(226, 23);
-      this.label2.TabIndex = 3;
-      this.label2.Text = "Gpg.exe Location";
+      this.GpgLocationLabel.AutoSize = true;
+      this.GpgLocationLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.GpgLocationLabel.Location = new System.Drawing.Point(21, 0);
+      this.GpgLocationLabel.Name = "GpgLocationLabel";
+      this.GpgLocationLabel.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
+      this.GpgLocationLabel.Size = new System.Drawing.Size(226, 23);
+      this.GpgLocationLabel.TabIndex = 3;
+      this.GpgLocationLabel.Text = "Gpg.exe Location";
       // 
       // GnuPgExe
       // 
@@ -172,34 +173,36 @@
       // 
       // ComposeTab
       // 
-      this.ComposeTab.Controls.Add(this.tableLayoutPanel1);
+      this.ComposeTab.Controls.Add(this.ComposeTableLayout);
       this.ComposeTab.Location = new System.Drawing.Point(4, 22);
       this.ComposeTab.Name = "ComposeTab";
       this.ComposeTab.Padding = new System.Windows.Forms.Padding(3);
-      this.ComposeTab.Size = new System.Drawing.Size(254, 114);
+      this.ComposeTab.Size = new System.Drawing.Size(254, 192);
       this.ComposeTab.TabIndex = 0;
       this.ComposeTab.Text = "Compose";
       this.ComposeTab.UseVisualStyleBackColor = true;
       // 
-      // tableLayoutPanel1
+      // ComposeTableLayout
       // 
-      this.tableLayoutPanel1.ColumnCount = 2;
-      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 18F));
-      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-      this.tableLayoutPanel1.Controls.Add(this.SignCheckBox, 1, 0);
-      this.tableLayoutPanel1.Controls.Add(this.EncryptCheckBox, 1, 1);
-      this.tableLayoutPanel1.Controls.Add(this.label1, 1, 2);
-      this.tableLayoutPanel1.Controls.Add(this.KeyBox, 1, 3);
-      this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-      this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-      this.tableLayoutPanel1.RowCount = 4;
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.tableLayoutPanel1.Size = new System.Drawing.Size(248, 108);
-      this.tableLayoutPanel1.TabIndex = 0;
+      this.ComposeTableLayout.ColumnCount = 2;
+      this.ComposeTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 18F));
+      this.ComposeTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+      this.ComposeTableLayout.Controls.Add(this.SignCheckBox, 1, 0);
+      this.ComposeTableLayout.Controls.Add(this.EncryptCheckBox, 1, 1);
+      this.ComposeTableLayout.Controls.Add(this.Encrypt2SelfCheckBox, 1, 2);
+      this.ComposeTableLayout.Controls.Add(this.DefaultKeyLabel, 1, 3);
+      this.ComposeTableLayout.Controls.Add(this.KeyBox, 1, 4);
+      this.ComposeTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ComposeTableLayout.Location = new System.Drawing.Point(3, 3);
+      this.ComposeTableLayout.Name = "ComposeTableLayout";
+      this.ComposeTableLayout.RowCount = 5;
+      this.ComposeTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.ComposeTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.ComposeTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.ComposeTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.ComposeTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.ComposeTableLayout.Size = new System.Drawing.Size(248, 186);
+      this.ComposeTableLayout.TabIndex = 0;
       // 
       // SignCheckBox
       // 
@@ -221,16 +224,26 @@
       this.EncryptCheckBox.Text = "Automatically Encrypt New Mail";
       this.EncryptCheckBox.UseVisualStyleBackColor = true;
       // 
-      // label1
+      // Encrypt2SelfCheckBox
       // 
-      this.label1.AutoSize = true;
-      this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.label1.Location = new System.Drawing.Point(21, 46);
-      this.label1.Name = "label1";
-      this.label1.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
-      this.label1.Size = new System.Drawing.Size(226, 23);
-      this.label1.TabIndex = 2;
-      this.label1.Text = "Default Key";
+      this.Encrypt2SelfCheckBox.AutoSize = true;
+      this.Encrypt2SelfCheckBox.Location = new System.Drawing.Point(21, 49);
+      this.Encrypt2SelfCheckBox.Name = "Encrypt2SelfCheckBox";
+      this.Encrypt2SelfCheckBox.Size = new System.Drawing.Size(139, 17);
+      this.Encrypt2SelfCheckBox.TabIndex = 1;
+      this.Encrypt2SelfCheckBox.Text = "Encrypt Mail To Self";
+      this.Encrypt2SelfCheckBox.UseVisualStyleBackColor = true;
+      // 
+      // DefaultKeyLabel
+      // 
+      this.DefaultKeyLabel.AutoSize = true;
+      this.DefaultKeyLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.DefaultKeyLabel.Location = new System.Drawing.Point(21, 69);
+      this.DefaultKeyLabel.Name = "DefaultKeyLabel";
+      this.DefaultKeyLabel.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
+      this.DefaultKeyLabel.Size = new System.Drawing.Size(226, 23);
+      this.DefaultKeyLabel.TabIndex = 2;
+      this.DefaultKeyLabel.Text = "Default Key";
       // 
       // KeyBox
       // 
@@ -240,39 +253,39 @@
       this.KeyBox.Items.AddRange(new object[] {
             "Key1",
             "Key2"});
-      this.KeyBox.Location = new System.Drawing.Point(21, 72);
+      this.KeyBox.Location = new System.Drawing.Point(21, 95);
       this.KeyBox.Name = "KeyBox";
       this.KeyBox.Size = new System.Drawing.Size(226, 21);
       this.KeyBox.TabIndex = 3;
       // 
       // ReadTab
       // 
-      this.ReadTab.Controls.Add(this.tableLayoutPanel2);
+      this.ReadTab.Controls.Add(this.ReadTableLayout);
       this.ReadTab.Location = new System.Drawing.Point(4, 22);
       this.ReadTab.Name = "ReadTab";
       this.ReadTab.Padding = new System.Windows.Forms.Padding(3);
-      this.ReadTab.Size = new System.Drawing.Size(254, 114);
+      this.ReadTab.Size = new System.Drawing.Size(254, 192);
       this.ReadTab.TabIndex = 1;
       this.ReadTab.Text = "Read";
       this.ReadTab.UseVisualStyleBackColor = true;
       // 
-      // tableLayoutPanel2
+      // ReadTableLayout
       // 
-      this.tableLayoutPanel2.ColumnCount = 2;
-      this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 18F));
-      this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-      this.tableLayoutPanel2.Controls.Add(this.VerifyCheckBox, 1, 0);
-      this.tableLayoutPanel2.Controls.Add(this.DecryptCheckBox, 1, 1);
-      this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
-      this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-      this.tableLayoutPanel2.RowCount = 4;
-      this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.tableLayoutPanel2.Size = new System.Drawing.Size(248, 108);
-      this.tableLayoutPanel2.TabIndex = 1;
+      this.ReadTableLayout.ColumnCount = 2;
+      this.ReadTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 18F));
+      this.ReadTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+      this.ReadTableLayout.Controls.Add(this.VerifyCheckBox, 1, 0);
+      this.ReadTableLayout.Controls.Add(this.DecryptCheckBox, 1, 1);
+      this.ReadTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ReadTableLayout.Location = new System.Drawing.Point(3, 3);
+      this.ReadTableLayout.Name = "ReadTableLayout";
+      this.ReadTableLayout.RowCount = 4;
+      this.ReadTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.ReadTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.ReadTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.ReadTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.ReadTableLayout.Size = new System.Drawing.Size(248, 186);
+      this.ReadTableLayout.TabIndex = 1;
       // 
       // VerifyCheckBox
       // 
@@ -296,40 +309,41 @@
       // 
       // ExchangeServerTab
       // 
-      this.ExchangeServerTab.Controls.Add(this.tableLayoutPanel4);
+      this.ExchangeServerTab.Controls.Add(this.ExchangeServerTableLayout);
       this.ExchangeServerTab.Location = new System.Drawing.Point(4, 22);
       this.ExchangeServerTab.Name = "ExchangeServerTab";
       this.ExchangeServerTab.Padding = new System.Windows.Forms.Padding(3);
-      this.ExchangeServerTab.Size = new System.Drawing.Size(254, 114);
+      this.ExchangeServerTab.Size = new System.Drawing.Size(254, 192);
       this.ExchangeServerTab.TabIndex = 3;
       this.ExchangeServerTab.Text = "Exchange Server";
       this.ExchangeServerTab.UseVisualStyleBackColor = true;
       // 
-      // tableLayoutPanel4
+      // ExchangeServerTableLayout
       // 
-      this.tableLayoutPanel4.ColumnCount = 2;
-      this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 18F));
-      this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-      this.tableLayoutPanel4.Controls.Add(this.label3, 1, 0);
-      this.tableLayoutPanel4.Controls.Add(this.DefaultDomainTextBox, 1, 1);
-      this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 3);
-      this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-      this.tableLayoutPanel4.RowCount = 3;
-      this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-      this.tableLayoutPanel4.Size = new System.Drawing.Size(255, 113);
-      this.tableLayoutPanel4.TabIndex = 0;
+      this.ExchangeServerTableLayout.ColumnCount = 2;
+      this.ExchangeServerTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 18F));
+      this.ExchangeServerTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+      this.ExchangeServerTableLayout.Controls.Add(this.DefaultDomainLabel, 1, 0);
+      this.ExchangeServerTableLayout.Controls.Add(this.DefaultDomainTextBox, 1, 1);
+      this.ExchangeServerTableLayout.Location = new System.Drawing.Point(3, 3);
+      this.ExchangeServerTableLayout.Name = "ExchangeServerTableLayout";
+      this.ExchangeServerTableLayout.RowCount = 3;
+      this.ExchangeServerTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.ExchangeServerTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.ExchangeServerTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+      this.ExchangeServerTableLayout.Size = new System.Drawing.Size(255, 163);
+      this.ExchangeServerTableLayout.TabIndex = 0;
       // 
-      // label3
+      // DefaultDomainLabel
       // 
-      this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(21, 0);
-      this.label3.Name = "label3";
-      this.label3.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
-      this.label3.Size = new System.Drawing.Size(133, 23);
-      this.label3.TabIndex = 0;
-      this.label3.Text = "Default Domain Name";
+      this.DefaultDomainLabel.AutoSize = true;
+      this.DefaultDomainLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.DefaultDomainLabel.Location = new System.Drawing.Point(21, 0);
+      this.DefaultDomainLabel.Name = "DefaultDomainLabel";
+      this.DefaultDomainLabel.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
+      this.DefaultDomainLabel.Size = new System.Drawing.Size(231, 23);
+      this.DefaultDomainLabel.TabIndex = 0;
+      this.DefaultDomainLabel.Text = "Default Domain Name";
       // 
       // DefaultDomainTextBox
       // 
@@ -343,23 +357,23 @@
       this.DefaultDomainTextBox.TabIndex = 1;
       this.DefaultDomainTextBox.TextChanged += new System.EventHandler(this.DefaultDomainTextBox_TextChanged);
       // 
-      // splitContainer2
+      // ButtonsContainer
       // 
-      this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-      this.splitContainer2.Name = "splitContainer2";
+      this.ButtonsContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ButtonsContainer.Location = new System.Drawing.Point(0, 0);
+      this.ButtonsContainer.Name = "ButtonsContainer";
       // 
-      // splitContainer2.Panel1
+      // ButtonsContainer.Panel1
       // 
-      this.splitContainer2.Panel1.Controls.Add(this.CancelButton);
+      this.ButtonsContainer.Panel1.Controls.Add(this.CancelButton);
       // 
-      // splitContainer2.Panel2
+      // ButtonsContainer.Panel2
       // 
-      this.splitContainer2.Panel2.Controls.Add(this.OkButton);
-      this.splitContainer2.Size = new System.Drawing.Size(262, 27);
-      this.splitContainer2.SplitterDistance = 125;
-      this.splitContainer2.SplitterWidth = 5;
-      this.splitContainer2.TabIndex = 0;
+      this.ButtonsContainer.Panel2.Controls.Add(this.OkButton);
+      this.ButtonsContainer.Size = new System.Drawing.Size(262, 30);
+      this.ButtonsContainer.SplitterDistance = 125;
+      this.ButtonsContainer.SplitterWidth = 5;
+      this.ButtonsContainer.TabIndex = 0;
       // 
       // CancelButton
       // 
@@ -369,7 +383,7 @@
       this.CancelButton.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.CancelButton.Location = new System.Drawing.Point(0, 0);
       this.CancelButton.Name = "CancelButton";
-      this.CancelButton.Size = new System.Drawing.Size(125, 27);
+      this.CancelButton.Size = new System.Drawing.Size(125, 30);
       this.CancelButton.TabIndex = 0;
       this.CancelButton.Text = "Cancel";
       this.CancelButton.UseVisualStyleBackColor = true;
@@ -380,7 +394,7 @@
       this.OkButton.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.OkButton.Location = new System.Drawing.Point(0, 0);
       this.OkButton.Name = "OkButton";
-      this.OkButton.Size = new System.Drawing.Size(132, 27);
+      this.OkButton.Size = new System.Drawing.Size(132, 30);
       this.OkButton.TabIndex = 0;
       this.OkButton.Text = "Ok";
       this.OkButton.UseVisualStyleBackColor = true;
@@ -400,32 +414,32 @@
       this.AcceptButton = this.OkButton;
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(262, 171);
-      this.Controls.Add(this.splitContainer1);
+      this.ClientSize = new System.Drawing.Size(262, 252);
+      this.Controls.Add(this.MainContainer);
       this.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
       this.Name = "Settings";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       this.Text = "Settings";
-      this.splitContainer1.Panel1.ResumeLayout(false);
-      this.splitContainer1.Panel2.ResumeLayout(false);
-      this.splitContainer1.ResumeLayout(false);
-      this.ComposeSettings.ResumeLayout(false);
+      this.MainContainer.Panel1.ResumeLayout(false);
+      this.MainContainer.Panel2.ResumeLayout(false);
+      this.MainContainer.ResumeLayout(false);
+      this.MainTabControl.ResumeLayout(false);
       this.GeneralTab.ResumeLayout(false);
-      this.tableLayoutPanel3.ResumeLayout(false);
-      this.tableLayoutPanel3.PerformLayout();
+      this.GeneralTableLayout.ResumeLayout(false);
+      this.GeneralTableLayout.PerformLayout();
       this.ComposeTab.ResumeLayout(false);
-      this.tableLayoutPanel1.ResumeLayout(false);
-      this.tableLayoutPanel1.PerformLayout();
+      this.ComposeTableLayout.ResumeLayout(false);
+      this.ComposeTableLayout.PerformLayout();
       this.ReadTab.ResumeLayout(false);
-      this.tableLayoutPanel2.ResumeLayout(false);
-      this.tableLayoutPanel2.PerformLayout();
+      this.ReadTableLayout.ResumeLayout(false);
+      this.ReadTableLayout.PerformLayout();
       this.ExchangeServerTab.ResumeLayout(false);
-      this.tableLayoutPanel4.ResumeLayout(false);
-      this.tableLayoutPanel4.PerformLayout();
-      this.splitContainer2.Panel1.ResumeLayout(false);
-      this.splitContainer2.Panel2.ResumeLayout(false);
-      this.splitContainer2.ResumeLayout(false);
+      this.ExchangeServerTableLayout.ResumeLayout(false);
+      this.ExchangeServerTableLayout.PerformLayout();
+      this.ButtonsContainer.Panel1.ResumeLayout(false);
+      this.ButtonsContainer.Panel2.ResumeLayout(false);
+      this.ButtonsContainer.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.Errors)).EndInit();
       this.ResumeLayout(false);
 
@@ -433,32 +447,32 @@
 
     #endregion
 
-    private System.Windows.Forms.SplitContainer splitContainer1;
-    private System.Windows.Forms.SplitContainer splitContainer2;
+    private System.Windows.Forms.SplitContainer MainContainer;
+    private System.Windows.Forms.SplitContainer ButtonsContainer;
     private System.Windows.Forms.Button CancelButton;
     private System.Windows.Forms.Button OkButton;
-    private System.Windows.Forms.TabControl ComposeSettings;
+    private System.Windows.Forms.TabControl MainTabControl;
     private System.Windows.Forms.TabPage ComposeTab;
     private System.Windows.Forms.TabPage ReadTab;
-    private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+    private System.Windows.Forms.TableLayoutPanel ComposeTableLayout;
     private System.Windows.Forms.CheckBox SignCheckBox;
     private System.Windows.Forms.CheckBox EncryptCheckBox;
-    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.CheckBox Encrypt2SelfCheckBox;
+    private System.Windows.Forms.Label DefaultKeyLabel;
     private System.Windows.Forms.ComboBox KeyBox;
-    private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+    private System.Windows.Forms.TableLayoutPanel ReadTableLayout;
     private System.Windows.Forms.CheckBox VerifyCheckBox;
     private System.Windows.Forms.CheckBox DecryptCheckBox;
     private System.Windows.Forms.TabPage GeneralTab;
-    private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+    private System.Windows.Forms.TableLayoutPanel GeneralTableLayout;
     private System.Windows.Forms.TextBox GnuPgExe;
-    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.Label GpgLocationLabel;
     private System.Windows.Forms.Button BrowseButton;
     private System.Windows.Forms.ErrorProvider Errors;
     private System.Windows.Forms.FolderBrowserDialog GnuPgExeFolderDialog;
     private System.Windows.Forms.TabPage ExchangeServerTab;
-    private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
-    private System.Windows.Forms.Label label3;
+    private System.Windows.Forms.TableLayoutPanel ExchangeServerTableLayout;
+    private System.Windows.Forms.Label DefaultDomainLabel;
     private System.Windows.Forms.TextBox DefaultDomainTextBox;
-
   }
 }

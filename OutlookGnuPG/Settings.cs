@@ -17,6 +17,7 @@ namespace OutlookGnuPG
       AutoVerify = settings.AutoVerify;
       AutoEncrypt = settings.AutoEncrypt;
       AutoSign = settings.AutoSign;
+      Encrypt2Self = settings.Encrypt2Self;
 
       DefaultKey = settings.DefaultKey;
       GnuPgPath = settings.GnuPgPath;
@@ -24,7 +25,7 @@ namespace OutlookGnuPG
       DefaultDomain = settings.DefaultDomain;
 
       // Temporary disable all settings regarding auto-verify/decrypt
-      ComposeSettings.TabPages.RemoveByKey(ReadTab.Name);
+      MainTabControl.TabPages.RemoveByKey(ReadTab.Name);
     }
 
     private string m_DefaultKey;
@@ -54,6 +55,12 @@ namespace OutlookGnuPG
       private set { SignCheckBox.Checked = value; }
     }
 
+    internal bool Encrypt2Self
+    {
+      get { return Encrypt2SelfCheckBox.Checked; }
+      private set { Encrypt2SelfCheckBox.Checked = value; }
+    }
+
     internal string GnuPgPath
     {
       get { return GnuPgExe.Text; }
@@ -64,18 +71,18 @@ namespace OutlookGnuPG
         if (string.IsNullOrEmpty(value))
         {
           ComposeTab.Enabled = ReadTab.Enabled = false;
-          ComposeSettings.TabPages.RemoveByKey(ComposeTab.Name);
-          //ComposeSettings.TabPages.RemoveByKey(ReadTab.Name);
+          MainTabControl.TabPages.RemoveByKey(ComposeTab.Name);
+          //MainTabControl.TabPages.RemoveByKey(ReadTab.Name);
         }
         else
         {
           ComposeTab.Enabled = ReadTab.Enabled = true;
 
-          if (!ComposeSettings.TabPages.ContainsKey(ComposeTab.Name))
-            ComposeSettings.TabPages.Add(ComposeTab);
+          if (!MainTabControl.TabPages.ContainsKey(ComposeTab.Name))
+            MainTabControl.TabPages.Add(ComposeTab);
 
-          //if (!ComposeSettings.TabPages.ContainsKey(ReadTab.Name))
-          //    ComposeSettings.TabPages.Add(ReadTab);
+          //if (!MainTabControl.TabPages.ContainsKey(ReadTab.Name))
+          //    MainTabControl.TabPages.Add(ReadTab);
         }
 
         PopulatePrivateKeys(!string.IsNullOrEmpty(value));
