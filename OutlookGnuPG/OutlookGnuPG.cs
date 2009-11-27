@@ -939,7 +939,7 @@ namespace OutlookGnuPG
 
       if (verifyResult.Contains("BADSIG"))
       {
-        errorResult = errorResult.Replace("gpg: ", string.Empty);
+        errorResult = RemoveInvalidAka(errorResult.Replace("gpg: ", string.Empty));
 
         MessageBox.Show(
             errorResult,
@@ -959,7 +959,7 @@ namespace OutlookGnuPG
       }
       else
       {
-        errorResult = errorResult.Replace("gpg: ", string.Empty);
+        errorResult = RemoveInvalidAka(errorResult.Replace("gpg: ", string.Empty));
 
         MessageBox.Show(
             errorResult,
@@ -1128,7 +1128,7 @@ namespace OutlookGnuPG
 
       if (verifyResult.Contains("BADMDC"))
       {
-        errorResult = errorResult.Replace("gpg: ", string.Empty);
+        errorResult = RemoveInvalidAka(errorResult.Replace("gpg: ", string.Empty));
 
         MessageBox.Show(
             errorResult,
@@ -1141,7 +1141,7 @@ namespace OutlookGnuPG
         // Decrypted OK, check for validsig
         if (verifyResult.Contains("BADSIG"))
         {
-          errorResult = errorResult.Replace("gpg: ", string.Empty);
+          errorResult = RemoveInvalidAka(errorResult.Replace("gpg: ", string.Empty));
 
           MessageBox.Show(
               errorResult,
@@ -1170,7 +1170,7 @@ namespace OutlookGnuPG
       }
       else
       {
-        errorResult = errorResult.Replace("gpg: ", string.Empty);
+        errorResult = RemoveInvalidAka(errorResult.Replace("gpg: ", string.Empty));
 
         MessageBox.Show(
             errorResult,
