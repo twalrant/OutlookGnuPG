@@ -402,7 +402,7 @@ namespace Starksoft.Cryptography.OpenPGP
     /// <returns>Collection of GnuPGKey objects.</returns>
     public GnuPGKeyCollection GetSecretKeys()
     {
-      return new GnuPGKeyCollection(GetCommand("--list-secret-keys"));
+      return new GnuPGKeyCollection(GetCommand("--list-secret-keys --display-charset utf-8"));
     }
 
     /// <summary>
