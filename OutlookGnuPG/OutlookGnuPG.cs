@@ -1215,12 +1215,7 @@ namespace OutlookGnuPG
     #region Key Management
     internal IList<GnuKey> GetPrivateKeys()
     {
-      string gnuPath = _gnuPg.BinaryPath;
-      if (!gnuPath.EndsWith("gpg.exe"))
-        _gnuPg.BinaryPath = Path.Combine(gnuPath, "gpg.exe");
-
       GnuPGKeyCollection privateKeys = _gnuPg.GetSecretKeys();
-      _gnuPg.BinaryPath = gnuPath;
 
       List<GnuKey> keys = new List<GnuKey>();
       foreach (GnuPGKey privateKey in privateKeys)
@@ -1250,12 +1245,7 @@ namespace OutlookGnuPG
 
     public IList<GnuKey> GetKeys()
     {
-      string gnuPath = _gnuPg.BinaryPath;
-      if (!gnuPath.EndsWith("gpg.exe"))
-        _gnuPg.BinaryPath = Path.Combine(gnuPath, "gpg.exe");
-
       GnuPGKeyCollection privateKeys = _gnuPg.GetKeys();
-      _gnuPg.BinaryPath = gnuPath;
 
       List<GnuKey> keys = new List<GnuKey>();
       foreach (GnuPGKey privateKey in privateKeys)
