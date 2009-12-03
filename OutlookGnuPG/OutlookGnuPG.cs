@@ -78,6 +78,11 @@ namespace OutlookGnuPG
       else
       {
         _gnuPg = new GnuPG(null, _settings.GnuPgPath);
+        if (!_gnuPg.BinaryExists())
+        {
+          _settings.GnuPgPath = string.Empty;
+          Settings(); // Prompt for GnuPG Path
+        }
       }
       _gnuPg.OutputType = OutputTypes.AsciiArmor;
 
@@ -1240,7 +1245,10 @@ namespace OutlookGnuPG
     internal IList<GnuKey> GetPrivateKeys(string gnuPgPath)
     {
       _gnuPg.BinaryPath = gnuPgPath;
-      return GetPrivateKeys();
+      if ( _gnuPg.BinaryExists() )
+        return GetPrivateKeys();
+      else
+        return new List<GnuKey>();
     }
 
     public IList<GnuKey> GetKeys()
@@ -1302,6 +1310,14 @@ namespace OutlookGnuPG
         result += s + Environment.NewLine;
       }
       return result;
+    }
+
+    public bool ValidateGnuPath(string gnuPath)
+    {
+      if (_gnuPg != null)
+        return _gnuPg.BinaryExists(gnuPath);
+      else
+        return false;
     }
     #endregion
   }

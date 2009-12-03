@@ -122,6 +122,7 @@ namespace Starksoft.Cryptography.OpenPGP
 
     private string _homePath;
     private string _binaryPath;
+    private string _gpgExe;
     private OutputTypes _outputType;
     private int _timeout = 10000; // 10 seconds
     private Process _proc;
@@ -281,7 +282,25 @@ namespace Starksoft.Cryptography.OpenPGP
     public string BinaryPath
     {
       get { return _binaryPath; }
-      set { _binaryPath = value; }
+      set { _binaryPath = value; SetExe(); }
+    }
+
+    /// <summary>
+    /// Check if the required binary is available.
+    /// </summary>
+    /// <returns>true if present or false otherwise</returns>
+    public bool BinaryExists()
+    {
+      return File.Exists(_gpgExe);
+    }
+
+    public bool BinaryExists(string gnuPath)
+    {
+      if (File.Exists(Path.Combine(gnuPath, GPG2_EXECUTABLE)))
+        return true;
+      if (File.Exists(Path.Combine(gnuPath, GPG_EXECUTABLE)))
+        return true;
+      return false;
     }
 
     /// <summary>
@@ -428,14 +447,19 @@ namespace Starksoft.Cryptography.OpenPGP
 
       options.Append(command);
 
+#if OFF
       string gpgExe = Path.Combine(GetGPGInstallLocation(), GPG2_EXECUTABLE);
       if (!File.Exists(gpgExe))
         gpgExe = Path.Combine(GetGPGInstallLocation(), GPG_EXECUTABLE);
       if (!File.Exists(gpgExe))
         throw new GnuPGException(String.Format(CultureInfo.InvariantCulture, "Unable to find GPG.EXE.  The path '{0}' does not contain the GPG(2).EXE executable program.  If this path is incorrect, please set the binary path on the GnuPG object to the correct GnuPG directory", GetGPGInstallLocation()));
+#else
+      if (string.IsNullOrEmpty(_gpgExe))
+        throw new GnuPGException(String.Format(CultureInfo.InvariantCulture, "Unable to find GPG(2).EXE.  The path '{0}' does not contain the GPG(2).EXE executable program.  If this path is incorrect, please set the binary path on the GnuPG object to the correct GnuPG directory", GetGPGInstallLocation()));
+#endif
 
       //  create a process info object with command line options
-      ProcessStartInfo procInfo = new ProcessStartInfo(gpgExe, options.ToString());
+      ProcessStartInfo procInfo = new ProcessStartInfo(_gpgExe, options.ToString());
 
       //  init the procInfo object
       procInfo.CreateNoWindow = true;
@@ -443,6 +467,9 @@ namespace Starksoft.Cryptography.OpenPGP
       procInfo.RedirectStandardInput = true;
       procInfo.RedirectStandardOutput = true;
       procInfo.RedirectStandardError = true;
+
+      if (_gpgExe.EndsWith(GPG2_EXECUTABLE))
+        procInfo.EnvironmentVariables.Add("LANG", "C");
 
       if (command.Contains("utf-8"))
         procInfo.StandardOutputEncoding = _outputDataEncoding = Encoding.UTF8;
@@ -592,14 +619,19 @@ namespace Starksoft.Cryptography.OpenPGP
     {
       string gpgErrorText = string.Empty;
 
+#if OFF
       string gpgExe = Path.Combine(GetGPGInstallLocation(), GPG2_EXECUTABLE);
       if (!File.Exists(gpgExe))
         gpgExe = Path.Combine(GetGPGInstallLocation(), GPG_EXECUTABLE);
       if (!File.Exists(gpgExe))
         throw new GnuPGException(String.Format(CultureInfo.InvariantCulture, "Unable to find GPG.EXE.  The path '{0}' does not contain the GPG.EXE executable program.  If this path is incorrect, please set the binary path on the GnuPG object to the correct GnuPG directory", GetGPGInstallLocation()));
+#else
+      if (string.IsNullOrEmpty(_gpgExe))
+        throw new GnuPGException(String.Format(CultureInfo.InvariantCulture, "Unable to find GPG(2).EXE.  The path '{0}' does not contain the GPG(2).EXE executable program.  If this path is incorrect, please set the binary path on the GnuPG object to the correct GnuPG directory", GetGPGInstallLocation()));
+#endif
 
       //  create a process info object with command line options
-      ProcessStartInfo procInfo = new ProcessStartInfo(gpgExe, GetCmdLineSwitches(action));
+      ProcessStartInfo procInfo = new ProcessStartInfo(_gpgExe, GetCmdLineSwitches(action));
 
       //  init the procInfo object
       procInfo.CreateNoWindow = true;
@@ -607,6 +639,9 @@ namespace Starksoft.Cryptography.OpenPGP
       procInfo.RedirectStandardInput = true;
       procInfo.RedirectStandardOutput = true;
       procInfo.RedirectStandardError = true;
+
+      if ( _gpgExe.EndsWith(GPG2_EXECUTABLE) )
+        procInfo.EnvironmentVariables.Add("LANG", "C");
 
       try
       {
@@ -724,8 +759,17 @@ namespace Starksoft.Cryptography.OpenPGP
     private void SetDefaults()
     {
       _outputType = OutputTypes.AsciiArmor;
+      SetExe();
     }
 
+    private void SetExe()
+    {
+      _gpgExe = Path.Combine(GetGPGInstallLocation(), GPG2_EXECUTABLE);
+      if (!File.Exists(_gpgExe))
+        _gpgExe = Path.Combine(GetGPGInstallLocation(), GPG_EXECUTABLE);
+      if (!File.Exists(_gpgExe))
+        _gpgExe = string.Empty;
+    }
 
     private void AsyncOutputReader()
     {

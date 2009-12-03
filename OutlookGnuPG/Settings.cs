@@ -105,7 +105,7 @@ namespace OutlookGnuPG
         return;
 
       GnuPgPath = GnuPgExeFolderDialog.SelectedPath;
-      ValidateGnuPath();
+      OkButton.Enabled = ValidateGnuPath();
     }
 
     private void PopulatePrivateKeys(bool gotGnu)
@@ -156,10 +156,10 @@ namespace OutlookGnuPG
         return false;
       }
 
-      if (!File.Exists(Path.Combine(GnuPgPath, "gpg.exe")))
+      if ( !Globals.OutlookGnuPG.ValidateGnuPath(GnuPgPath) )
       {
         // No gpg.exe found, complain!
-        Errors.SetError(GnuPgExe, "No gpg.exe found in directory!");
+        Errors.SetError(GnuPgExe, "No gpg(2).exe found in directory!");
         GnuPgExe.Dock = DockStyle.None;
         GnuPgExe.Width = _originalExeWidth - 17;
         return false;
