@@ -1,3 +1,8 @@
+2009-12-03    <changelog.tgc@walrant.net>
+
+	* OutlookGnuPG/OutlookGnuPG.cs (DecryptEmail): Add support for
+	missing MDC.
+
 2009-11-27    <changelog.tgc@walrant.net>
 
 	* OutlookGnuPG/Settings.Designer.cs : Refactor setting dialog box.

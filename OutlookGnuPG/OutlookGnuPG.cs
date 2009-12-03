@@ -757,7 +757,7 @@ namespace OutlookGnuPG
               if (string.IsNullOrEmpty(option) && ex.Message.StartsWith("gpg: C4771111"))
               {
                 DialogResult res = MessageBox.Show(
-                    ex.Message + "\r\n\r\nEncrypt mail anyway?",
+                    ex.Message + Environment.NewLine + Environment.NewLine + "Encrypt mail anyway?",
                     "GnuPG Warning",
                     MessageBoxButtons.OKCancel,
                     MessageBoxIcon.Exclamation);
@@ -825,7 +825,7 @@ namespace OutlookGnuPG
               if (string.IsNullOrEmpty(option) && ex.Message.StartsWith("gpg: C4771111"))
               {
                 DialogResult res = MessageBox.Show(
-                  ex.Message + "\r\n\r\nSign and Encrypt the mail anyway?",
+                  ex.Message + Environment.NewLine + Environment.NewLine + "Sign and Encrypt the mail anyway?",
                   "GnuPG Warning",
                   MessageBoxButtons.OKCancel,
                   MessageBoxIcon.Exclamation);
@@ -1176,14 +1176,16 @@ namespace OutlookGnuPG
       else
       {
         errorResult = RemoveInvalidAka(errorResult.Replace("gpg: ", string.Empty));
+        errorResult = errorResult.Replace("WARNING", Environment.NewLine + "WARNING");
 
-        MessageBox.Show(
-            errorResult,
+        DialogResult res = MessageBox.Show(
+            errorResult + Environment.NewLine + "Decrypt mail anyway?",
             "Unknown Encryption",
-            MessageBoxButtons.OK,
+            MessageBoxButtons.OKCancel,
             MessageBoxIcon.Exclamation);
+        if (res == DialogResult.OK)
+          mailItem.Body = stdOutResult;
       }
-
     }
     #endregion
 
