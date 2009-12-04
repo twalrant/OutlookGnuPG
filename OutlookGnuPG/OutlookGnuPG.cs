@@ -66,6 +66,12 @@ namespace OutlookGnuPG
     // The GC comes along and eats our buttons, we need to hold a reference to it... *sigh*
     private IDictionary<string, Office.CommandBarButton> _buttons = new Dictionary<string, Office.CommandBarButton>();
 
+    // PGP Headers
+    // http://www.ietf.org/rfc/rfc4880.txt page 54
+    const string _pgpSignedHdrPattern = "BEGIN PGP SIGNED MESSAGE";
+    const string _pgpEncryptedHdrPattern = "BEGIN PGP MESSAGE";
+    const string _pgpSignedOrEncHdrPattern = "BEGIN PGP( SIGNED)? MESSAGE";
+
     private void OutlookGnuPG_Startup(object sender, EventArgs e)
     {
       _settings = new Properties.Settings();
@@ -219,7 +225,7 @@ namespace OutlookGnuPG
     private void OutlookGnuPG_NewInspector(Outlook.Inspector inspector)
     {
       Outlook.MailItem mailItem = inspector.CurrentItem as Outlook.MailItem;
-      if (mailItem != null && mailItem.Sent == false)
+      if (mailItem != null)
       {
         WrapMailItem(inspector);
       }
@@ -268,33 +274,47 @@ namespace OutlookGnuPG
     /// the open operation is not completed and the inspector is not displayed.</param>
     void mailItem_Open(Outlook.MailItem mailItem, ref bool Cancel)
     {
-      // Only handle mail to be sent (in composing)
-      if (mailItem != null && mailItem.Sent == true)
+      if (mailItem == null)
         return;
 
-      Outlook.UserProperty SignProperpty = mailItem.UserProperties["GnuPGSetting.Sign"];
-      if (SignProperpty == null)
+      // New mail (Compose)
+      if (mailItem.Sent == false)
       {
-        ribbon.SignButton.Checked = _settings.AutoSign;
+        Outlook.UserProperty SignProperpty = mailItem.UserProperties["GnuPGSetting.Sign"];
+        if (SignProperpty == null)
+        {
+          ribbon.SignButton.Checked = _settings.AutoSign;
+        }
+        else
+        {
+          ribbon.SignButton.Checked = (bool)SignProperpty.Value;
+        }
+
+        Outlook.UserProperty EncryptProperpty = mailItem.UserProperties["GnuPGSetting.Encrypt"];
+        if (EncryptProperpty == null)
+        {
+          ribbon.EncryptButton.Checked = _settings.AutoEncrypt;
+        }
+        else
+        {
+          ribbon.EncryptButton.Checked = (bool)EncryptProperpty.Value;
+        }
       }
       else
       {
-        ribbon.SignButton.Checked = (bool)SignProperpty.Value;
+        // Read mail
+        if (mailItem.BodyFormat == Outlook.OlBodyFormat.olFormatPlain)
+        {
+          ribbon.VerifyButton.Enabled = Regex.IsMatch(mailItem.Body, _pgpSignedHdrPattern);
+          ribbon.DecryptButton.Enabled = Regex.IsMatch(mailItem.Body, _pgpEncryptedHdrPattern);
+        }
+        else
+        {
+          ribbon.DecryptButton.Enabled = ribbon.VerifyButton.Enabled = false;
+        }
       }
-
-      Outlook.UserProperty EncryptProperpty = mailItem.UserProperties["GnuPGSetting.Encrypt"];
-      if (EncryptProperpty == null)
-      {
-        ribbon.EncryptButton.Checked = _settings.AutoEncrypt;
-      }
-      else
-      {
-        ribbon.EncryptButton.Checked = (bool)EncryptProperpty.Value;
-      }
-
       ribbon.InvalidateButtons();
     }
-
     /// <summary>
     /// WrapperEvent fired when a mailItem is closed.
     /// </summary>
@@ -303,23 +323,25 @@ namespace OutlookGnuPG
     /// the open operation is not completed and the inspector is not displayed.</param>
     void mailItem_Close(Outlook.MailItem mailItem, ref bool Cancel)
     {
-      // Only handle mail to be sent (in composing)
-      if (mailItem != null && mailItem.Sent == true)
+      if (mailItem == null)
         return;
 
-      bool toSave = false;
-      Outlook.UserProperty SignProperpty = mailItem.UserProperties["GnuPGSetting.Sign"];
-      if (SignProperpty == null || (bool)SignProperpty.Value != ribbon.SignButton.Checked)
+      // New mail (Compose)
+      if (mailItem.Sent == false)
       {
-        toSave = true;
-      }
-      Outlook.UserProperty EncryptProperpty = mailItem.UserProperties["GnuPGSetting.Encrypt"];
-      if (EncryptProperpty == null || (bool)EncryptProperpty.Value != ribbon.EncryptButton.Checked)
-      {
-        toSave = true;
-      }
-      if (toSave == true)
-      {
+        bool toSave = false;
+        Outlook.UserProperty SignProperpty = mailItem.UserProperties["GnuPGSetting.Sign"];
+        if (SignProperpty == null || (bool)SignProperpty.Value != ribbon.SignButton.Checked)
+        {
+          toSave = true;
+        }
+        Outlook.UserProperty EncryptProperpty = mailItem.UserProperties["GnuPGSetting.Encrypt"];
+        if (EncryptProperpty == null || (bool)EncryptProperpty.Value != ribbon.EncryptButton.Checked)
+        {
+          toSave = true;
+        }
+        if (toSave == true)
+        {
 #if DISABLED
         BoolEventArgs ev = e as BoolEventArgs;
         DialogResult res = MessageBox.Show("Do you want to save changes?",
@@ -337,15 +359,16 @@ namespace OutlookGnuPG
           ev.Value = true;
         }
 #else
-        // Invalidate the mailItem to force Outlook to ask to save the mailItem, hence calling
-        // the mailItem_Save() handler to record the buttons state.
-        // Note: the reason (button state property change) to save the mailItem is not necessairy obvious
-        // to the user, certainly if nothing has been updated/changed by the user. If specific notification
-        // is required see DISABLED code above. Beware, it might open 2 dialog boxes: the add-in custom and
-        // the regular Outlook save confirmation.
-        mailItem.Subject = mailItem.Subject;
-      }
+          // Invalidate the mailItem to force Outlook to ask to save the mailItem, hence calling
+          // the mailItem_Save() handler to record the buttons state.
+          // Note: the reason (button state property change) to save the mailItem is not necessairy obvious
+          // to the user, certainly if nothing has been updated/changed by the user. If specific notification
+          // is required see DISABLED code above. Beware, it might open 2 dialog boxes: the add-in custom and
+          // the regular Outlook save confirmation.
+          mailItem.Subject = mailItem.Subject;
+        }
 #endif
+      }
     }
 
     /// <summary>
@@ -358,24 +381,27 @@ namespace OutlookGnuPG
     /// the open operation is not completed and the inspector is not displayed.</param>
     void mailItem_Save(Outlook.MailItem mailItem, ref bool Cancel)
     {
-      // Only handle mail to be sent (in composing)
-      if (mailItem != null && mailItem.Sent == true)
+      if (mailItem == null)
         return;
 
-      // Record compose button states.
-      Outlook.UserProperty SignProperpty = mailItem.UserProperties["GnuPGSetting.Sign"];
-      if (SignProperpty == null)
+      // New mail (Compose)
+      if (mailItem.Sent == false)
       {
-        SignProperpty = mailItem.UserProperties.Add("GnuPGSetting.Sign", Outlook.OlUserPropertyType.olYesNo, false, null);
-      }
-      SignProperpty.Value = ribbon.SignButton.Checked;
+        // Record compose button states.
+        Outlook.UserProperty SignProperpty = mailItem.UserProperties["GnuPGSetting.Sign"];
+        if (SignProperpty == null)
+        {
+          SignProperpty = mailItem.UserProperties.Add("GnuPGSetting.Sign", Outlook.OlUserPropertyType.olYesNo, false, null);
+        }
+        SignProperpty.Value = ribbon.SignButton.Checked;
 
-      Outlook.UserProperty EncryptProperpty = mailItem.UserProperties["GnuPGSetting.Encrypt"];
-      if (EncryptProperpty == null)
-      {
-        EncryptProperpty = mailItem.UserProperties.Add("GnuPGSetting.Encrypt", Outlook.OlUserPropertyType.olYesNo, false, null);
+        Outlook.UserProperty EncryptProperpty = mailItem.UserProperties["GnuPGSetting.Encrypt"];
+        if (EncryptProperpty == null)
+        {
+          EncryptProperpty = mailItem.UserProperties.Add("GnuPGSetting.Encrypt", Outlook.OlUserPropertyType.olYesNo, false, null);
+        }
+        EncryptProperpty.Value = ribbon.EncryptButton.Checked;
       }
-      EncryptProperpty.Value = ribbon.EncryptButton.Checked;
     }
     #endregion
 
@@ -878,8 +904,7 @@ namespace OutlookGnuPG
         return;
       }
 
-      if (mail.Contains("BEGIN PGP MESSAGE") == false &&
-          mail.Contains("BEGIN PGP SIGNED MESSAGE"))
+      if (Regex.IsMatch(mailItem.Body, _pgpSignedHdrPattern) == false)
       {
         MessageBox.Show(
             "OutlookGnuPG cannot help here.",
@@ -1001,7 +1026,7 @@ namespace OutlookGnuPG
         return;
       }
 
-      if (mail.Contains("BEGIN PGP MESSAGE") == false)
+      if (Regex.IsMatch(mailItem.Body, _pgpEncryptedHdrPattern) == false)
       {
         MessageBox.Show(
             "OutlookGnuPG cannot help here.",

@@ -51,17 +51,19 @@ namespace OutlookGnuPG
     public GnuPGToggleButton VerifyButton;
     public GnuPGToggleButton DecryptButton;
 
-    const string signButtonId = "signButton";
-    const string encryptButtonId = "encryptButton";
-    const string verifyButtonId = "verifyButton";
-    const string decryptButtonId = "decryptButton";
+    private Dictionary<string, GnuPGToggleButton> Buttons = new Dictionary<string, GnuPGToggleButton>();
 
     public GnuPGRibbon()
     {
-      SignButton = new GnuPGToggleButton(signButtonId);
-      EncryptButton = new GnuPGToggleButton(encryptButtonId);
-      VerifyButton = new GnuPGToggleButton(verifyButtonId);
-      DecryptButton = new GnuPGToggleButton(decryptButtonId);
+      SignButton = new GnuPGToggleButton("signButton");
+      EncryptButton = new GnuPGToggleButton("encryptButton");
+      VerifyButton = new GnuPGToggleButton("verifyButton");
+      DecryptButton = new GnuPGToggleButton("decryptButton");
+
+      Buttons.Add(SignButton.Id, SignButton);
+      Buttons.Add(EncryptButton.Id, EncryptButton);
+      Buttons.Add(VerifyButton.Id, VerifyButton);
+      Buttons.Add(DecryptButton.Id, DecryptButton);
     }
 
     #region IRibbonExtensibility Members
@@ -99,8 +101,10 @@ namespace OutlookGnuPG
 
     internal void InvalidateButtons()
     {
-      ribbon.InvalidateControl(SignButton.ControlID);
-      ribbon.InvalidateControl(EncryptButton.ControlID);
+      ribbon.InvalidateControl(SignButton.Id);
+      ribbon.InvalidateControl(EncryptButton.Id);
+      ribbon.InvalidateControl(VerifyButton.Id);
+      ribbon.InvalidateControl(DecryptButton.Id);
     }
 
     #region Ribbon Callbacks
@@ -113,7 +117,7 @@ namespace OutlookGnuPG
     public void OnEncryptButton(Office.IRibbonControl control, bool isPressed)
     {
       EncryptButton.Checked = isPressed;
-      ribbon.InvalidateControl(EncryptButton.ControlID);
+      ribbon.InvalidateControl(EncryptButton.Id);
     }
 
     public void OnDecryptButton(Office.IRibbonControl control)
@@ -126,7 +130,7 @@ namespace OutlookGnuPG
     public void OnSignButton(Office.IRibbonControl control, bool isPressed)
     {
       SignButton.Checked = isPressed;
-      ribbon.InvalidateControl(SignButton.ControlID);
+      ribbon.InvalidateControl(SignButton.Id);
     }
 
     public void OnVerifyButton(Office.IRibbonControl control)
@@ -146,8 +150,8 @@ namespace OutlookGnuPG
       Globals.OutlookGnuPG.Settings();
 
       // Force an update of button state:
-      ribbon.InvalidateControl(signButtonId);
-      ribbon.InvalidateControl(encryptButtonId);
+      ribbon.InvalidateControl(SignButton.Id);
+      ribbon.InvalidateControl(EncryptButton.Id);
     }
 
     public void OnAboutButton(Office.IRibbonControl control)
@@ -159,16 +163,8 @@ namespace OutlookGnuPG
       GetCustomImage(Office.IRibbonControl control)
     {
       stdole.IPictureDisp pictureDisp = null;
-      switch (control.Id)
+      switch(control.Id)
       {
-        case encryptButtonId:
-        case decryptButtonId:
-          pictureDisp = ImageConverter.Convert(global::OutlookGnuPG.Properties.Resources.lock_edit);
-          break;
-        case signButtonId:
-        case verifyButtonId:
-          pictureDisp = ImageConverter.Convert(global::OutlookGnuPG.Properties.Resources.link_edit);
-          break;
         case "settingsButtonNew":
         case "settingsButtonRead":
           pictureDisp = ImageConverter.Convert(global::OutlookGnuPG.Properties.Resources.database_gear);
@@ -177,26 +173,30 @@ namespace OutlookGnuPG
         case "aboutButtonRead":
           pictureDisp = ImageConverter.Convert(global::OutlookGnuPG.Properties.Resources.Logo);
           break;
+        default:
+          if ((control.Id == EncryptButton.Id) || (control.Id == DecryptButton.Id))
+            pictureDisp = ImageConverter.Convert(global::OutlookGnuPG.Properties.Resources.lock_edit);
+          if ((control.Id == SignButton.Id) || (control.Id == VerifyButton.Id))
+            pictureDisp = ImageConverter.Convert(global::OutlookGnuPG.Properties.Resources.link_edit);
+          break;
       }
       return pictureDisp;
     }
 
     public bool GetPressed(Office.IRibbonControl control)
     {
-      switch (control.Id)
-      {
-        case encryptButtonId:
-          return EncryptButton.Checked;
-        case signButtonId:
-          return SignButton.Checked;
-        case decryptButtonId:
-          return DecryptButton.Checked;
-        case verifyButtonId:
-          return VerifyButton.Checked;
-        default:
-          return false;
-      }
+      if ( Buttons.ContainsKey(control.Id) )
+        return Buttons[control.Id].Checked;
+      return false;
     }
+
+    public bool GetEnabled(Office.IRibbonControl control)
+    {
+      if (Buttons.ContainsKey(control.Id))
+        return Buttons[control.Id].Enabled;
+      return false;
+    }
+
     #endregion
 
     #region Helpers
@@ -238,15 +238,22 @@ namespace OutlookGnuPG
 
   public class GnuPGToggleButton
   {
-    private bool m_Checked;
+    private bool m_Checked = false;
     public bool Checked
     {
       get { return m_Checked; }
       set { m_Checked = value; }
     }
 
-    private string m_ControlId;
-    public string ControlID
+    private bool m_Enabled = true;
+    public bool Enabled
+    {
+      get { return m_Enabled; }
+      set { m_Enabled = value; }
+    }
+
+    private string m_ControlId = "unknown";
+    public string Id
     {
       get { return m_ControlId; }
       set { m_ControlId = value; }
@@ -254,7 +261,7 @@ namespace OutlookGnuPG
 
     public GnuPGToggleButton(string controlId)
     {
-      ControlID = controlId;
+      Id = controlId;
     }
   }
 }

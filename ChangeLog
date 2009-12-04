@@ -4,6 +4,8 @@
 	provided to the Dispose method (Issues #6 re-opened).
 	* OutlookGnuPG/OutlookGnuPG.cs (DecryptEmail/VerifyEmail): Add
 	test to check if PGP content is present.
+	(OutlookGnuPG.cs/GnuPGRibbon.cs): Grey out verify and/or decrypt
+	when it's not relevant.
 
 2009-12-03    <changelog.tgc@walrant.net>
 
