@@ -41,8 +41,7 @@ namespace OutlookGnuPG
     /// <summary>
     /// The pointer to the wrapped object.
     /// </summary>
-    private object _Object;
-    public object Object { get { return _Object; } private set { _Object = value; } }
+    protected object _wrapped;
 
     /// <summary>
     /// The unique ID of the wrapped object.
@@ -55,8 +54,8 @@ namespace OutlookGnuPG
     /// </summary>
     protected void OnClosed()
     {
-      if (Dispose != null) { Dispose(Id, Object); }
-      Object = null;
+      if (Dispose != null) { Dispose(Id, this); }
+      _wrapped = null;
     }
 
     /// <summary>
@@ -65,8 +64,8 @@ namespace OutlookGnuPG
     /// <param name="o">The pointer to the object to monitor</param>
     public OutlookWrapper(object o)
     {
-      Object = o;
       Id = Guid.NewGuid();
+      _wrapped = o;
     }
   }
   #endregion
@@ -102,7 +101,9 @@ namespace OutlookGnuPG
 
     private void ConnectEvents()
     {
-      Outlook.Explorer explorer = Object as Outlook.Explorer;
+      Outlook.Explorer explorer = _wrapped as Outlook.Explorer;
+
+      // Hookup explorer events
       ((Outlook.ExplorerEvents_10_Event)explorer).Activate += new Outlook.ExplorerEvents_10_ActivateEventHandler(ExplorerWrapper_Activate);
       ((Outlook.ExplorerEvents_10_Event)explorer).Deactivate += new Outlook.ExplorerEvents_10_DeactivateEventHandler(ExplorerWrapper_Deactivate);
       ((Outlook.ExplorerEvents_10_Event)explorer).ViewSwitch += new Outlook.ExplorerEvents_10_ViewSwitchEventHandler(ExplorerWrapper_ViewSwitch);
@@ -111,7 +112,7 @@ namespace OutlookGnuPG
 
     void ExplorerWrapper_Close()
     {
-      if (Close != null) { Close(Object as Outlook.Explorer); }
+      if (Close != null) { Close(_wrapped as Outlook.Explorer); }
       DisconnectEvents();
       GC.Collect();
       GC.WaitForPendingFinalizers();
@@ -120,22 +121,24 @@ namespace OutlookGnuPG
 
     void ExplorerWrapper_ViewSwitch()
     {
-      if (ViewSwitch != null) { ViewSwitch(Object as Outlook.Explorer); }
+      if (ViewSwitch != null) { ViewSwitch(_wrapped as Outlook.Explorer); }
     }
 
     void ExplorerWrapper_Deactivate()
     {
-      if (Deactivate != null) { Deactivate(Object as Outlook.Explorer); }
+      if (Deactivate != null) { Deactivate(_wrapped as Outlook.Explorer); }
     }
 
     private void ExplorerWrapper_Activate()
     {
-      if (Activate != null) { Activate(Object as Outlook.Explorer); }
+      if (Activate != null) { Activate(_wrapped as Outlook.Explorer); }
     }
 
     private void DisconnectEvents()
     {
-      Outlook.Explorer explorer = Object as Outlook.Explorer;
+      Outlook.Explorer explorer = _wrapped as Outlook.Explorer;
+
+      // Unhook events from the explorer
       ((Outlook.ExplorerEvents_10_Event)explorer).Activate -= new Outlook.ExplorerEvents_10_ActivateEventHandler(ExplorerWrapper_Activate);
       ((Outlook.ExplorerEvents_10_Event)explorer).Deactivate -= new Outlook.ExplorerEvents_10_DeactivateEventHandler(ExplorerWrapper_Deactivate);
       ((Outlook.ExplorerEvents_10_Event)explorer).ViewSwitch -= new Outlook.ExplorerEvents_10_ViewSwitchEventHandler(ExplorerWrapper_ViewSwitch);
@@ -146,10 +149,21 @@ namespace OutlookGnuPG
 
   #region Inspector wrapper
   /// <summary>
+  /// Delegate signature to handle (some) inspector events.
+  /// </summary>
+  /// <param name="inspector">the inspector for which the event is fired</param>
+  public delegate void InspectorCloseDelegate(Outlook.Inspector inspector);
+  
+  /// <summary>
   /// The wrapper class to warp an Inspector objet.
   /// </summary>
   internal class InspectorWrapper : OutlookWrapper
   {
+    /// <summary>
+    /// Public inspector events.
+    /// </summary>
+    public event InspectorCloseDelegate Close = null;
+    
     /// <summary>
     /// The constructor
     /// </summary>
@@ -165,7 +179,7 @@ namespace OutlookGnuPG
     /// </summary>
     private void ConnectEvents()
     {
-      Outlook.Inspector inspector = Object as Outlook.Inspector;
+      Outlook.Inspector inspector = _wrapped as Outlook.Inspector;
 
       // Hookup inspector events
       ((Outlook.InspectorEvents_Event)inspector).Close += new Outlook.InspectorEvents_CloseEventHandler(InspectorWrapper_Close);
@@ -176,6 +190,7 @@ namespace OutlookGnuPG
     /// </summary>
     void InspectorWrapper_Close()
     {
+      if (Close != null) { Close(_wrapped as Outlook.Inspector); }
       DisconnectEvents();
       GC.Collect();
       GC.WaitForPendingFinalizers();
@@ -187,8 +202,8 @@ namespace OutlookGnuPG
     /// </summary>
     protected virtual void DisconnectEvents()
     {
-      Outlook.Inspector inspector = Object as Outlook.Inspector;
-
+      Outlook.Inspector inspector = _wrapped as Outlook.Inspector;
+      
       // Unhook events from the inspector
       ((Outlook.InspectorEvents_Event)inspector).Close -= new Outlook.InspectorEvents_CloseEventHandler(InspectorWrapper_Close);
     }
@@ -231,6 +246,8 @@ namespace OutlookGnuPG
       : base(inspector)
     {
       _mailItem = inspector.CurrentItem as Outlook.MailItem;
+      if (_mailItem == null)
+        throw new Exception("Not a mailItem in the provided inspector");
       ConnectEvents();
     }
 

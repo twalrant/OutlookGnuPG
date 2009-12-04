@@ -1,3 +1,10 @@
+2009-12-04    <changelog.tgc@walrant.net>
+
+	* OutlookGnuPG/OutlookWrapper.cs (OnClosed): correct the object
+	provided to the Dispose method (Issues #6 re-opened).
+	* OutlookGnuPG/OutlookGnuPG.cs (DecryptEmail/VerifyEmail): Add
+	test to check if PGP content is present.
+
 2009-12-03    <changelog.tgc@walrant.net>
 
 	* OutlookGnuPG/OutlookGnuPG.cs (DecryptEmail): Add support for

@@ -878,6 +878,17 @@ namespace OutlookGnuPG
         return;
       }
 
+      if (mail.Contains("BEGIN PGP MESSAGE") == false &&
+          mail.Contains("BEGIN PGP SIGNED MESSAGE"))
+      {
+        MessageBox.Show(
+            "OutlookGnuPG cannot help here.",
+            "Mail is not signed",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Exclamation);
+        return;
+      }
+      
       // Still no gpg.exe path... Annoy the user once again, maybe he'll get it ;)
       if (string.IsNullOrEmpty(_settings.GnuPgPath))
         Settings();
@@ -987,6 +998,16 @@ namespace OutlookGnuPG
             MessageBoxButtons.OK,
             MessageBoxIcon.Error);
 
+        return;
+      }
+
+      if (mail.Contains("BEGIN PGP MESSAGE") == false)
+      {
+        MessageBox.Show(
+            "OutlookGnuPG cannot help here.",
+            "Mail is not encrypted",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Exclamation);
         return;
       }
 
