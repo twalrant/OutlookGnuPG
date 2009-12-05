@@ -78,7 +78,8 @@ namespace OutlookGnuPG
   public delegate void ExplorerActivateDelegate(Outlook.Explorer explorer);
   public delegate void ExplorerDeactivateDelegate(Outlook.Explorer explorer);
   public delegate void ExplorerViewSwitchDelegate(Outlook.Explorer explorer);
-  public delegate void ExplorerCloseDelegate(Outlook.Explorer exlorer);
+  public delegate void ExplorerSelectionChangeDelegate(Outlook.Explorer explorer);
+  public delegate void ExplorerCloseDelegate(Outlook.Explorer explorer);
 
   /// <summary>
   /// 
@@ -92,6 +93,7 @@ namespace OutlookGnuPG
     public event ExplorerDeactivateDelegate Deactivate = null;
     public event ExplorerViewSwitchDelegate ViewSwitch = null;
     public event ExplorerCloseDelegate Close = null;
+    public event ExplorerSelectionChangeDelegate SelectionChange = null;
 
     public ExplorerWrapper(Outlook.Explorer explorer)
       : base(explorer)
@@ -108,6 +110,7 @@ namespace OutlookGnuPG
       ((Outlook.ExplorerEvents_10_Event)explorer).Deactivate += new Outlook.ExplorerEvents_10_DeactivateEventHandler(ExplorerWrapper_Deactivate);
       ((Outlook.ExplorerEvents_10_Event)explorer).ViewSwitch += new Outlook.ExplorerEvents_10_ViewSwitchEventHandler(ExplorerWrapper_ViewSwitch);
       ((Outlook.ExplorerEvents_10_Event)explorer).Close += new Outlook.ExplorerEvents_10_CloseEventHandler(ExplorerWrapper_Close);
+      ((Outlook.ExplorerEvents_10_Event)explorer).SelectionChange += new Outlook.ExplorerEvents_10_SelectionChangeEventHandler(ExplorerWrapper_SelectionChange);
     }
 
     void ExplorerWrapper_Close()
@@ -117,6 +120,11 @@ namespace OutlookGnuPG
       GC.Collect();
       GC.WaitForPendingFinalizers();
       OnClosed();
+    }
+
+    void ExplorerWrapper_SelectionChange()
+    {
+      if (SelectionChange != null) { SelectionChange(_wrapped as Outlook.Explorer); }
     }
 
     void ExplorerWrapper_ViewSwitch()
@@ -143,6 +151,7 @@ namespace OutlookGnuPG
       ((Outlook.ExplorerEvents_10_Event)explorer).Deactivate -= new Outlook.ExplorerEvents_10_DeactivateEventHandler(ExplorerWrapper_Deactivate);
       ((Outlook.ExplorerEvents_10_Event)explorer).ViewSwitch -= new Outlook.ExplorerEvents_10_ViewSwitchEventHandler(ExplorerWrapper_ViewSwitch);
       ((Outlook.ExplorerEvents_10_Event)explorer).Close -= new Outlook.ExplorerEvents_10_CloseEventHandler(ExplorerWrapper_Close);
+      ((Outlook.ExplorerEvents_10_Event)explorer).SelectionChange -= new Outlook.ExplorerEvents_10_SelectionChangeEventHandler(ExplorerWrapper_SelectionChange);
     }
   }
   #endregion

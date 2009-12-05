@@ -1,3 +1,13 @@
+2009-12-05    <changelog.tgc@walrant.net>
+
+	* OutlookGnuPG/OutlookGnuPG.cs: Add support for context enabled
+	command bar and read-ribbon buttons. Enable autoverify and
+	autodecrypt.
+	* OutlookGnuPG/OutlookWrapper.cs: Add SelectionChange event to
+	support context enabled buttons.
+	* OutlookGnuPG/Settings.cs: enable ReadTab for autoverify and
+	autodecrypt.
+
 2009-12-04    <changelog.tgc@walrant.net>
 
 	* OutlookGnuPG/OutlookWrapper.cs (OnClosed): correct the object

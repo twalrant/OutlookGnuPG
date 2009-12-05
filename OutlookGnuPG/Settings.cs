@@ -25,7 +25,7 @@ namespace OutlookGnuPG
       DefaultDomain = settings.DefaultDomain;
 
       // Temporary disable all settings regarding auto-verify/decrypt
-      MainTabControl.TabPages.RemoveByKey(ReadTab.Name);
+      // MainTabControl.TabPages.RemoveByKey(ReadTab.Name);
     }
 
     private string m_DefaultKey;
@@ -81,8 +81,8 @@ namespace OutlookGnuPG
           if (!MainTabControl.TabPages.ContainsKey(ComposeTab.Name))
             MainTabControl.TabPages.Add(ComposeTab);
 
-          //if (!MainTabControl.TabPages.ContainsKey(ReadTab.Name))
-          //    MainTabControl.TabPages.Add(ReadTab);
+          if (!MainTabControl.TabPages.ContainsKey(ReadTab.Name))
+              MainTabControl.TabPages.Add(ReadTab);
         }
 
         PopulatePrivateKeys(!string.IsNullOrEmpty(value));

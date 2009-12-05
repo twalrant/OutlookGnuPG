@@ -55,6 +55,7 @@ namespace OutlookGnuPG
     private Properties.Settings _settings;
     private GnuPG _gnuPg;
     private PositionalCommandBar _gpgBar;
+    private bool commandBarAutoDecrypt = false;
     private const string _gnuPgErrorString = "[@##$$##@|!GNUPGERROR!|@##$$##@]"; // Hacky way of dealing with exceptions
     private Outlook.Explorer _explorer;
     private Outlook.Explorers _explorers;
@@ -68,9 +69,9 @@ namespace OutlookGnuPG
 
     // PGP Headers
     // http://www.ietf.org/rfc/rfc4880.txt page 54
-    const string _pgpSignedHdrPattern = "BEGIN PGP SIGNED MESSAGE";
-    const string _pgpEncryptedHdrPattern = "BEGIN PGP MESSAGE";
-    const string _pgpSignedOrEncHdrPattern = "BEGIN PGP( SIGNED)? MESSAGE";
+    const string _pgpSignedHeader = "BEGIN PGP SIGNED MESSAGE";
+    const string _pgpEncryptedHeader = "BEGIN PGP MESSAGE";
+    const string _pgpHeaderPattern = "BEGIN PGP( SIGNED)? MESSAGE";
 
     private void OutlookGnuPG_Startup(object sender, EventArgs e)
     {
@@ -176,6 +177,7 @@ namespace OutlookGnuPG
       ExplorerWrapper wrappedExplorer = new ExplorerWrapper(explorer);
       wrappedExplorer.Dispose += new OutlookWrapperDisposeDelegate(ExplorerWrapper_Dispose);
       wrappedExplorer.ViewSwitch += new ExplorerViewSwitchDelegate(wrappedExplorer_ViewSwitch);
+      wrappedExplorer.SelectionChange += new ExplorerSelectionChangeDelegate(wrappedExplorer_SelectionChange);
       _WrappedObjects[wrappedExplorer.Id] = explorer;
     }
 
@@ -189,6 +191,7 @@ namespace OutlookGnuPG
       ExplorerWrapper wrappedExplorer = o as ExplorerWrapper;
       wrappedExplorer.Dispose -= new OutlookWrapperDisposeDelegate(ExplorerWrapper_Dispose);
       wrappedExplorer.ViewSwitch -= new ExplorerViewSwitchDelegate(wrappedExplorer_ViewSwitch);
+      wrappedExplorer.SelectionChange -= new ExplorerSelectionChangeDelegate(wrappedExplorer_SelectionChange);
       _WrappedObjects.Remove(id);
     }
 
@@ -209,6 +212,33 @@ namespace OutlookGnuPG
       else
       {
         gpgBar.Bar.Visible = false;
+      }
+    }
+
+    /// <summary>
+    /// WrapEvent fired for SelectionChange event.
+    /// </summary>
+    /// <param name="explorer">the explorer for which a selectionchange event fired.</param>
+    void wrappedExplorer_SelectionChange(Outlook.Explorer explorer)
+    {
+      Outlook.Selection Selection = explorer.Selection;
+      if (Selection.Count != 1)
+        return;
+      Outlook.MailItem mailItem = Selection[1] as Outlook.MailItem;
+      if (mailItem == null)
+        return;
+      if (_buttons.ContainsKey("GnuPGVerifyMail") == false)
+        return;
+      if (mailItem.BodyFormat == Outlook.OlBodyFormat.olFormatPlain)
+      {
+        Match match = Regex.Match(mailItem.Body, _pgpHeaderPattern);
+        _buttons["GnuPGVerifyMail"].Enabled = (match.Value == _pgpSignedHeader);
+        _buttons["GnuPGDecryptMail"].Enabled = (match.Value == _pgpEncryptedHeader);
+      }
+      else
+      {
+        _buttons["GnuPGVerifyMail"].Enabled = false;
+        _buttons["GnuPGDecryptMail"].Enabled = false;
       }
     }
     #endregion
@@ -301,16 +331,31 @@ namespace OutlookGnuPG
         }
       }
       else
-      {
         // Read mail
+      {
+        // Default: disable read-buttons
+        ribbon.DecryptButton.Enabled = ribbon.VerifyButton.Enabled = false;
+
+        // Handle plain text mail
         if (mailItem.BodyFormat == Outlook.OlBodyFormat.olFormatPlain)
         {
-          ribbon.VerifyButton.Enabled = Regex.IsMatch(mailItem.Body, _pgpSignedHdrPattern);
-          ribbon.DecryptButton.Enabled = Regex.IsMatch(mailItem.Body, _pgpEncryptedHdrPattern);
+          // Look for PGP headers
+          Match match = Regex.Match(mailItem.Body, _pgpHeaderPattern);
+
+          if ((commandBarAutoDecrypt || _settings.AutoDecrypt) && match.Value == _pgpEncryptedHeader)
+          {
+            commandBarAutoDecrypt = false;
+            DecryptEmail(mailItem);
+            // Update match again, in case decryption failed/cancelled.
+            match = Regex.Match(mailItem.Body, _pgpHeaderPattern);
         }
-        else
+          else if (_settings.AutoVerify && match.Value == _pgpSignedHeader)
         {
-          ribbon.DecryptButton.Enabled = ribbon.VerifyButton.Enabled = false;
+            VerifyEmail(mailItem);
+          }
+
+          ribbon.VerifyButton.Enabled = (match.Value == _pgpSignedHeader);
+          ribbon.DecryptButton.Enabled = (match.Value == _pgpEncryptedHeader);
         }
       }
       ribbon.InvalidateButtons();
@@ -546,7 +591,10 @@ namespace OutlookGnuPG
         return;
       }
 
-      DecryptEmail(mailItem);
+      // Force open of mailItem with auto decrypt.
+      commandBarAutoDecrypt = true;
+      mailItem.Display(true);
+//      DecryptEmail(mailItem);
     }
 
     private void AboutButton_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)
@@ -904,7 +952,7 @@ namespace OutlookGnuPG
         return;
       }
 
-      if (Regex.IsMatch(mailItem.Body, _pgpSignedHdrPattern) == false)
+      if (Regex.IsMatch(mailItem.Body, _pgpSignedHeader) == false)
       {
         MessageBox.Show(
             "OutlookGnuPG cannot help here.",
@@ -1026,7 +1074,7 @@ namespace OutlookGnuPG
         return;
       }
 
-      if (Regex.IsMatch(mailItem.Body, _pgpEncryptedHdrPattern) == false)
+      if (Regex.IsMatch(mailItem.Body, _pgpEncryptedHeader) == false)
       {
         MessageBox.Show(
             "OutlookGnuPG cannot help here.",
