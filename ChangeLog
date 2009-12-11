@@ -1,3 +1,9 @@
+2009-12-11    <changelog.tgc@walrant.net>
+
+	* OutlookGnuPG/OutlookGnuPG.cs : refactor the command bar (to
+	handlePicture asignment exception).
+	* OutlookGnuPG/GnuPGCommandBar.cs: New file.
+
 2009-12-05    <changelog.tgc@walrant.net>
 
 	* OutlookGnuPG/OutlookGnuPG.cs: Add support for context enabled

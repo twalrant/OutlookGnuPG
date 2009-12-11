@@ -162,9 +162,9 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="ClipboardHelper.cs" />
     <Compile Include="DataClip.cs" />
     <Compile Include="GnuKey.cs" />
+    <Compile Include="GnuPGCommandBar.cs" />
     <Compile Include="GnuPGRibbon.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -175,7 +175,6 @@
     <Compile Include="Passphrase.Designer.cs">
       <DependentUpon>Passphrase.cs</DependentUpon>
     </Compile>
-    <Compile Include="PositionalCommandBar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -236,8 +235,6 @@
     <Compile Include="Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Win32ClipboardAPI.cs" />
-    <Compile Include="Win32MemoryAPI.cs" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
