@@ -1,5 +1,10 @@
 2009-12-11    <changelog.tgc@walrant.net>
 
+	* References/OpenPGP/src/GnuPG.cs (GetCommand): add (missing)
+	check for presence of "LANG".
+
+2009-12-11    <changelog.tgc@walrant.net>
+
 	* OutlookGnuPG/OutlookGnuPG.cs : refactor the command bar (to
 	handlePicture asignment exception).
 	* OutlookGnuPG/GnuPGCommandBar.cs: New file.

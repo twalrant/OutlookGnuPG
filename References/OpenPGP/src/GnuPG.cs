@@ -468,7 +468,7 @@ namespace Starksoft.Cryptography.OpenPGP
       procInfo.RedirectStandardOutput = true;
       procInfo.RedirectStandardError = true;
 
-      if (_gpgExe.EndsWith(GPG2_EXECUTABLE))
+      if (_gpgExe.EndsWith(GPG2_EXECUTABLE) == true && procInfo.EnvironmentVariables.ContainsKey("LANG") == false)
         procInfo.EnvironmentVariables.Add("LANG", "C");
 
       if (command.Contains("utf-8"))
@@ -640,7 +640,7 @@ namespace Starksoft.Cryptography.OpenPGP
       procInfo.RedirectStandardOutput = true;
       procInfo.RedirectStandardError = true;
 
-      if ( _gpgExe.EndsWith(GPG2_EXECUTABLE) )
+      if (_gpgExe.EndsWith(GPG2_EXECUTABLE) == true && procInfo.EnvironmentVariables.ContainsKey("LANG") == false)
         procInfo.EnvironmentVariables.Add("LANG", "C");
 
       try
