@@ -1,3 +1,8 @@
+2010-01-15    <changelog.tgc@walrant.net>
+
+	* OutlookGnuPG/OutlookGnuPG.cs (Application_ItemSend): remove user
+	properties from sent mails (See issue #40).
+
 2009-12-11    <changelog.tgc@walrant.net>
 
 	* References/OpenPGP/src/GnuPG.cs (GetCommand): add (missing)

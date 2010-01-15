@@ -62,6 +62,7 @@ namespace OutlookGnuPG
 
     // This dictionary holds our Wrapped Inspectors, Explorers, MailItems
     private Dictionary<Guid, object> _WrappedObjects;
+    private bool _sendingMail = false;
 
     // PGP Headers
     // http://www.ietf.org/rfc/rfc4880.txt page 54
@@ -247,6 +248,8 @@ namespace OutlookGnuPG
       Outlook.MailItem mailItem = inspector.CurrentItem as Outlook.MailItem;
       if (mailItem != null)
       {
+        // Reset flag...
+        _sendingMail = false;
         WrapMailItem(inspector);
       }
     }
@@ -361,6 +364,23 @@ namespace OutlookGnuPG
       if (mailItem == null)
         return;
 
+      // Handle close event without valid maiItem, ie: after a Send action.
+      try
+      {
+        bool sentFlag = mailItem.Sent;
+      }
+      catch(System.Runtime.InteropServices.COMException e)
+      {
+        if (e.Message.StartsWith("The item has been moved or deleted"))
+        {
+          return;
+        }
+        else
+        {
+          throw e;
+        }
+      }
+
       // New mail (Compose)
       if (mailItem.Sent == false)
       {
@@ -375,7 +395,7 @@ namespace OutlookGnuPG
         {
           toSave = true;
         }
-        if (toSave == true)
+        if (toSave == true && _sendingMail == false)
         {
 #if DISABLED
         BoolEventArgs ev = e as BoolEventArgs;
@@ -424,19 +444,28 @@ namespace OutlookGnuPG
       {
         // Record compose button states.
         Outlook.UserProperty SignProperpty = mailItem.UserProperties["GnuPGSetting.Sign"];
-        if (SignProperpty == null)
+        if (SignProperpty == null && _sendingMail == false)
         {
           SignProperpty = mailItem.UserProperties.Add("GnuPGSetting.Sign", Outlook.OlUserPropertyType.olYesNo, false, null);
         }
-        SignProperpty.Value = ribbon.SignButton.Checked;
+        if (SignProperpty != null)
+        {
+          SignProperpty.Value = ribbon.SignButton.Checked;
+        }
 
         Outlook.UserProperty EncryptProperpty = mailItem.UserProperties["GnuPGSetting.Encrypt"];
-        if (EncryptProperpty == null)
+        if (EncryptProperpty == null && _sendingMail == false)
         {
           EncryptProperpty = mailItem.UserProperties.Add("GnuPGSetting.Encrypt", Outlook.OlUserPropertyType.olYesNo, false, null);
         }
-        EncryptProperpty.Value = ribbon.EncryptButton.Checked;
+        if (EncryptProperpty != null)
+        {
+          EncryptProperpty.Value = ribbon.EncryptButton.Checked;
+        }
       }
+
+      // Reset flag...
+      _sendingMail = false;
     }
     #endregion
 
@@ -526,6 +555,29 @@ namespace OutlookGnuPG
 
     #region Send Logic
     private void Application_ItemSend(object Item, ref bool Cancel)
+    {
+      PrepareToSendEmail(Item, ref Cancel);
+      if (Cancel == true)
+        return;
+
+      Outlook.MailItem mailItem = Item as Outlook.MailItem;
+      if (mailItem == null )
+        return;
+
+      // Cleanup user properties.
+      for (int i = mailItem.UserProperties.Count; i>0; i--)
+      {
+        if (mailItem.UserProperties[i].Name.StartsWith("GnuPGSetting."))
+        {
+          mailItem.UserProperties.Remove(i);
+        }
+      }
+
+      // Currently sending mail, requires special handling in Write/Close events.
+      _sendingMail = true;
+    }
+
+    private void PrepareToSendEmail(object Item, ref bool Cancel)
     {
       Outlook.MailItem mailItem = Item as Outlook.MailItem;
 
