@@ -59,6 +59,7 @@ namespace OutlookGnuPG
     private const string _gnuPgErrorString = "[@##$$##@|!GNUPGERROR!|@##$$##@]"; // Hacky way of dealing with exceptions
     private Outlook.Explorers _explorers;
     private Outlook.Inspectors _inspectors;        // Outlook inspectors collection
+    private String _gnuPgComment = "";
 
     // This dictionary holds our Wrapped Inspectors, Explorers, MailItems
     private Dictionary<Guid, object> _WrappedObjects;
@@ -89,6 +90,9 @@ namespace OutlookGnuPG
         }
       }
       _gnuPg.OutputType = OutputTypes.AsciiArmor;
+
+      System.Version v = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+      _gnuPgComment = String.Format("--comment \"Using GnuPG with OutlookGnuPG v{0}.{1}.{2}\"", v.Major, v.Minor, v.Build);
 
       _WrappedObjects = new Dictionary<Guid, object>();
 
@@ -734,6 +738,8 @@ namespace OutlookGnuPG
       {
         using (StreamWriter writer = new StreamWriter(inputStream))
         {
+          _gnuPg.UserCmdOptions = _gnuPgComment;
+
           writer.Write(mail);
           writer.Flush();
           inputStream.Position = 0;
@@ -777,7 +783,7 @@ namespace OutlookGnuPG
           // Ready for two passes encryption.
           foreach (string option in new string[] { "", "--trust-model always" })
           {
-            _gnuPg.UserCmdOptions = option;
+            _gnuPg.UserCmdOptions = option + " " + _gnuPgComment;
 
             if (_settings.Encrypt2Self == true)
               _gnuPg.UserCmdOptions += " --encrypt-to " + _settings.DefaultKey;
@@ -844,7 +850,7 @@ namespace OutlookGnuPG
           // Ready for two passes sign/encryption.
           foreach (string option in new string[] { "", "--trust-model always" })
           {
-            _gnuPg.UserCmdOptions = option;
+            _gnuPg.UserCmdOptions = option + " " + _gnuPgComment;
 
             if (_settings.Encrypt2Self == true)
               _gnuPg.UserCmdOptions += " --encrypt-to " + _settings.DefaultKey;

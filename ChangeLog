@@ -2,6 +2,8 @@
 
 	* OutlookGnuPG/OutlookGnuPG.cs (Application_ItemSend): remove user
 	properties from sent mails (See issue #40).
+	* OutlookGnuPG/OutlookGnuPG.cs: Add comment in the generated PGP
+	block.
 
 2009-12-11    <changelog.tgc@walrant.net>
 
